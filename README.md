@@ -13,8 +13,9 @@ This is the Github repository for the software components of this project
    so long as you have navigated to the right folder)
 1. Create a new branch, this is so that we don't break the stable 'master' branch. If you write some code that breaks things it's not detrimental because
    you did it on a seperate branch
-2. To create the branch type `git branch -b (branch name here)`
+2. To create the branch type `git branch (branch name here)`
 2. Ideally name the branch after the [trello](https://trello.com/b/TlyVqQNG/idp-l104) ticket that you are working on
+1. Access your branch by using `git checkout branch_name`
 1. Do some work and save it locally
 1. Type `git status` to see which files you've edited
 1. ADD the files by using `git add filename` (filename is the acutal filename, not the word filename)
