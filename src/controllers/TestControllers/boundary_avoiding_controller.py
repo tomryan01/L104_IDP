@@ -37,5 +37,3 @@ while robot.step(TIME_STEP) != -1:
     pass
 
 # Enter here exit cleanup code.
-
-#HELLO RUPERT THIS IS JUST A TEST
