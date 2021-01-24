@@ -132,6 +132,6 @@ Robot {
     density -1
     mass 1
   }
-  controller "2_wheel_robot"
+  controller "boundary_avoiding_controller"
 }
 }
