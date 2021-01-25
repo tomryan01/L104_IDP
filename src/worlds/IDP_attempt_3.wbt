@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.4756847362301831 0.8440350569308668 0.24764663209769183 5.177806218898422
-  position -0.9649178739703829 0.7749033519387574 0.572554649065052
+  orientation 0.666432101880754 0.5343934430308594 0.5198960488678712 4.342789500938951
+  position -0.23625320765246155 1.2054518545689135 0.017381422234689005
 }
 TexturedBackground {
 }
@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation -0.151899 0.05 0.0689192
+  translation -0.157462 0.05 0.0800966
   children [
     DEF BOX_R Shape {
       appearance PBRAppearance {
@@ -99,7 +99,7 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation 0.03 0.05 0.72
+  translation -0.312228 0.05 0.105946
   children [
     USE BOX_B
   ]
@@ -419,6 +419,7 @@ DEF TWO_WHEEL_ROBOT Robot {
     }
     DEF Blue_Camera Camera {
       translation 0.0025 0 0.1
+      rotation 0 1 0 3.14
       children [
         Shape {
           appearance PBRAppearance {
@@ -441,6 +442,7 @@ DEF TWO_WHEEL_ROBOT Robot {
     }
     DEF Red_Camera Camera {
       translation -0.0025 0 0.1
+      rotation 0 1 0 3.14
       children [
         Shape {
           appearance PBRAppearance {
@@ -457,8 +459,10 @@ DEF TWO_WHEEL_ROBOT Robot {
       recognitionColors [
         1 0 0
       ]
+      fieldOfView 0.1
       width 1
       height 1
+      near 0.005
       far 0.1
     }
     DEF BODY_SOLID Solid {
@@ -481,5 +485,5 @@ DEF TWO_WHEEL_ROBOT Robot {
     density -1
     mass 1
   }
-  controller "arm_test_controller"
+  controller "camera_test_controller"
 }
