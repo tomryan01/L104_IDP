@@ -35,7 +35,7 @@ for i in range(2):
 #for i  in range(1):
 #    cameras.append(robot.getDevice(cameraNames[i]))
 #    cameras[i].enable(TIME_STEP)
-camera = robot.getDevice('red_camera')
+camera = robot.getDevice('camera1')
 camera.enable(TIME_STEP)
 
 #pick up function
