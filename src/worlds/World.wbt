@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.666432101880754 0.5343934430308594 0.5198960488678712 4.342789500938951
-  position -0.23625320765246155 1.2054518545689135 0.017381422234689005
+  orientation 0.11620422583483984 -0.7574016243528107 -0.6425257639393533 3.413858480461038
+  position 0.19413015893457697 5.173117214760241 -1.6555449600238012
 }
 TexturedBackground {
 }
@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation -0.157462 0.05 0.0800966
+  translation 0.102753 0.05 -0.0226999
   children [
     DEF BOX_R Shape {
       appearance PBRAppearance {
@@ -99,7 +99,7 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation -0.312228 0.05 0.105946
+  translation -0.391112 0.05 -0.168404
   children [
     USE BOX_B
   ]
@@ -199,7 +199,7 @@ DEF WALL_4 Solid {
   boundingObject USE WALL_SHAPE
 }
 DEF TWO_WHEEL_ROBOT Robot {
-  translation -0.15308 0.1 -0.134193
+  translation -0.15308 0.065 -0.134193
   children [
     DEF DS_MID DistanceSensor {
       translation 0 -0.01 0.1
@@ -218,8 +218,8 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       name "ds_mid"
       lookupTable [
-        0 1000 0
-        5 0 0
+        0 0 0
+        6 6000 0
       ]
     }
     DEF Arm1 HingeJoint {
@@ -309,6 +309,7 @@ DEF TWO_WHEEL_ROBOT Robot {
     Emitter {
     }
     GPS {
+      translation 0 0 0.08
     }
     DEF DS_RIGHT DistanceSensor {
       translation -0.03 0 0.1
@@ -417,13 +418,13 @@ DEF TWO_WHEEL_ROBOT Robot {
       physics Physics {
       }
     }
-    DEF Blue_Camera Camera {
-      translation 0.0025 0 0.1
+    DEF Camera1 Camera {
+      translation 0 0 0.1
       rotation 0 1 0 3.14
       children [
         Shape {
           appearance PBRAppearance {
-            baseColor 0.15 0.757 0.95
+            baseColor 0 0 0
             roughness 1
             metalness 0
           }
@@ -432,30 +433,7 @@ DEF TWO_WHEEL_ROBOT Robot {
           }
         }
       ]
-      name "blue_camera"
-      recognitionColors [
-        0 0 1
-      ]
-      width 1
-      height 1
-      far 0.1
-    }
-    DEF Red_Camera Camera {
-      translation -0.0025 0 0.1
-      rotation 0 1 0 3.14
-      children [
-        Shape {
-          appearance PBRAppearance {
-            baseColor 0.9 0.38 0.1
-            roughness 1
-            metalness 0
-          }
-          geometry Box {
-            size 0.005 0.005 0.005
-          }
-        }
-      ]
-      name "red_camera"
+      name "camera1"
       recognitionColors [
         1 0 0
       ]
@@ -463,7 +441,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       width 1
       height 1
       near 0.005
-      far 0.1
+      far 0.2
     }
     DEF BODY_SOLID Solid {
       children [
@@ -485,5 +463,5 @@ DEF TWO_WHEEL_ROBOT Robot {
     density -1
     mass 1
   }
-  controller "camera_test_controller"
+  controller "<extern>"
 }
