@@ -63,9 +63,11 @@ class Gps(MyRobot):
 
         #find and return desired angle
         if dot_product > 0:
-            return math.asin(cross_product)
+            directionFromStart =  math.asin(cross_product)
         else:
             if cross_product > 0:
-                return (math.pi - math.asin(cross_product))
+                directionFromStart =  (math.pi - math.asin(cross_product))
             else:
-                return (-math.pi - math.asin(cross_product))
+                directionFromStart =  (-math.pi - math.asin(cross_product))
+        
+        return directionFromStart

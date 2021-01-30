@@ -21,7 +21,7 @@ class MyRobot:
         self.numArms = 2
         self.numDistanceSensors = 1
         self.numColourSensors = 1
-        self.numGPS = 2
+        self.numGps = 2
 
         #set origin/start point for robot
         self.origin = [1, 1]
@@ -43,23 +43,23 @@ class MyRobot:
         for i in range(2):
             self.arms.append(self.robot.getDevice(armNames[i]))
 
-    def setDistanceSensors(self, distanceSensors, TimeStep):
+    def setDistanceSensors(self, distanceSensors, timeStep):
         assert len(distanceSensors) == self.numDistanceSensors
         for i in range(1):
             self.distanceSensors.append(self.robot.getDevice(distanceSensors[i]))
-            self.distanceSensors[i].enable(TimeStep)
+            self.distanceSensors[i].enable(timeStep)
 
-    def setColourSensors(self, colourSensors, TimeStep):
+    def setColourSensors(self, colourSensors, timeStep):
         assert len(colourSensors) == self.numColourSensors
         for i in range(1):
             self.colourSensors.append(self.robot.getDevice(colourSensors[i]))
-            self.colourSensors[i].enable(TimeStep)
+            self.colourSensors[i].enable(timeStep)
 
-    def setGPS(self, gpsSensors, TimeStep):
-        assert len(gpsSensors) == self.numGPS
+    def setGps(self, gpsSensors, timeStep):
+        assert len(gpsSensors) == self.numGps
         for i in range(2):
             self.gpsSensors.append(self.robot.getDevice(gpsSensors[i]))
-            self.gpsSensors[i].enable(TimeStep)
+            self.gpsSensors[i].enable(timeStep)
 
     def reset(self):
         self.wheels[0].setVelocity(0)
