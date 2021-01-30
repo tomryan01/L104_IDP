@@ -11,8 +11,9 @@ testRobot = Behaviour()
 
 testRobot.setWheels(["wheel1", "wheel2"])
 testRobot.setArms(["arm_1", "arm_2"])
-testRobot.setDistanceSensors(["ds_mid"])
-testRobot.setColourSensors(["camera1"])
+testRobot.setDistanceSensors(["ds_mid"], TIME_STEP)
+testRobot.setColourSensors(["camera1"], TIME_STEP)
+testRobot.setGps(["gps_front", "gps_mid"], TIME_STEP)
 
 while testRobot.robot.step(TIME_STEP) != -1:
     #every single tick we call the reset method to
@@ -20,4 +21,5 @@ while testRobot.robot.step(TIME_STEP) != -1:
     #called they're set to the appropriate values given the
     #current conditions
     testRobot.reset()
-    testRobot.findBlocks()
+    
+    print(testRobot.direction_from_start())

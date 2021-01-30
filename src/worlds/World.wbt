@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.05712974697110341 -0.96707672985574 -0.24798949691982025 3.5800069150758005
-  position 1.54870916111714 2.6383948459046094 -3.879548596013884
+  orientation 0.07000408463287748 -0.9423724210065122 -0.32715997350078996 3.5395447388451178
+  position 1.212305680692324 2.300240204424802 -3.022901350596233
 }
 TexturedBackground {
 }
@@ -201,6 +201,9 @@ DEF WALL_4 Solid {
 DEF TWO_WHEEL_ROBOT Robot {
   translation -0.15308 0.065 -0.134193
   children [
+    GPS {
+      name "gps_mid"
+    }
     DEF DS_MID DistanceSensor {
       translation 0 -0.01 0.1
       rotation 0 1 0 -1.5708003061004252
@@ -309,7 +312,8 @@ DEF TWO_WHEEL_ROBOT Robot {
     Emitter {
     }
     GPS {
-      translation 0 0 0.08
+      translation 0 0 0.1
+      name "gps_front"
     }
     DEF DS_RIGHT DistanceSensor {
       translation -0.03 0 0.1
