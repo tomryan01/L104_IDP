@@ -22,4 +22,5 @@ while testRobot.robot.step(TIME_STEP) != -1:
     #current conditions
     testRobot.reset()
     
-    print(testRobot.direction_from_start())
+    testRobot.findBlocks()
+
