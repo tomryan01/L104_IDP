@@ -8,11 +8,13 @@ class Drive(MyRobot):
     def forwards(self, speed):
         self.wheels[0].setVelocity(speed)
         self.wheels[1].setVelocity(speed)
-        self.wheels[0].setPosition(float('inf'))
-        self.wheels[1].setPosition(float('inf'))
 
-    def backwards(self):
-        pass
+    def backwards(self, speed):
+        self.wheels[0].setVelocity(-1 * speed)
+        self.wheels[1].setVelocity(-1 * speed)
 
-    def spin(self):
-        pass
+    def spin(self, speed, direction):
+        #direction parameter is -1 to left, 1 to right
+        assert direction == -1 or direction == 1
+        self.wheels[0].setVelocity(direction * speed)
+        self.wheels[1].setVelocity(-1 * direction * speed)
