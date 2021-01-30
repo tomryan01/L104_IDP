@@ -27,7 +27,11 @@ class MyRobot:
     def setWheels(self, wheelNames):
         assert len(wheelNames) == self.numWheels
         for i in range(2):
-            self.wheels.append(self.robot.getDevice(wheelNames[i]))   
+            self.wheels.append(self.robot.getDevice(wheelNames[i]))
+            
+        #wheel positions will be defined by velocity
+        self.wheels[0].setPosition(float('inf'))
+        self.wheels[1].setPosition(float('inf'))
 
     def setArms(self, armNames):
         assert len(armNames) == self.numArms
@@ -47,5 +51,3 @@ class MyRobot:
     def reset(self):
         self.wheels[0].setVelocity(0)
         self.wheels[1].setVelocity(0)
-        self.wheels[0].setPosition(0)
-        self.wheels[1].setPosition(0)
