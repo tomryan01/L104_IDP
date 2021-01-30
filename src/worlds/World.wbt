@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.07000408463287748 -0.9423724210065122 -0.32715997350078996 3.5395447388451178
-  position 1.212305680692324 2.300240204424802 -3.022901350596233
+  orientation -0.3563802781701507 0.884680299435058 0.3005559267804615 1.522978993630415
+  position 3.094054362187574 1.923589435711689 1.267255276410345
 }
 TexturedBackground {
 }
@@ -71,7 +71,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation 0.1 0.05 1.1
+  translation 0.125342 0.05 0.960984
   children [
     USE BOX_R
   ]
@@ -199,7 +199,8 @@ DEF WALL_4 Solid {
   boundingObject USE WALL_SHAPE
 }
 DEF TWO_WHEEL_ROBOT Robot {
-  translation -0.15308 0.065 -0.134193
+  translation 1 0.065 1
+  rotation 0 1 0 -1.57
   children [
     GPS {
       name "gps_mid"
@@ -352,7 +353,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation 0.06 0 0
-        rotation -0.0019079727809748464 0.0019079797047584803 0.9999963596200304 1.5708036408021426
+        rotation -0.0019079727809753577 0.0019079797047586384 0.9999963596200304 1.5708036408021415
         children [
           DEF WHEEL_SHAPE Shape {
             appearance PBRAppearance {
@@ -385,7 +386,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation -0.06 0 0
-        rotation -0.0019079727809748464 0.0019079797047584803 0.9999963596200304 1.5708036408021426
+        rotation -0.0019079727809752408 0.0019079797047586 0.9999963596200305 1.5708036408021415
         children [
           USE WHEEL_SHAPE
         ]
