@@ -72,3 +72,5 @@ class MyRobot:
     def reset(self):
         self.wheels[0].setVelocity(0)
         self.wheels[1].setVelocity(0)
+        self.arms[0].setVelocity(0)
+        self.arms[1].setVelocity(0)
