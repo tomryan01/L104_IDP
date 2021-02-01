@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5771750490764339 0.5767156110482189 0.578159205320555 4.186363972250046
-  position 0.015012985299249246 4.62330977883911 0.04151675584318841
+  orientation 0.5732971055483012 0.584413428845827 0.5742746494096737 4.197868822589545
+  position -0.07744458323188824 4.622254482374715 0.04135923820867429
 }
 TexturedBackground {
 }
@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation 0.832764 0.05 -1.30452
+  translation 0.466588 0.05 -0.823443
   rotation 0 1 0 4.692820414042842e-06
   children [
     DEF BOX_R Shape {
@@ -51,7 +51,7 @@ DEF Block_R1 Solid {
   }
 }
 DEF Block_R2 Solid {
-  translation -0.140599 0.05 -0.200348
+  translation 0.405647 0.05 0.466702
   children [
     USE BOX_R
   ]
@@ -62,7 +62,7 @@ DEF Block_R2 Solid {
   }
 }
 DEF Block_R3 Solid {
-  translation 0.753219 0.05 -1.30632
+  translation -0.151078 0.05 -0.46376
   children [
     USE BOX_R
   ]
@@ -72,7 +72,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation 0.679798 0.05 -1.3028
+  translation 0.926427 0.05 -0.46279
   children [
     USE BOX_R
   ]
@@ -200,7 +200,7 @@ DEF WALL_4 Solid {
   boundingObject USE WALL_SHAPE
 }
 DEF TWO_WHEEL_ROBOT Robot {
-  translation 1 0.042 1
+  translation 0.95 0.042 0.95
   rotation 0 1 0 0.000796322
   children [
     GPS {
@@ -354,7 +354,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation 0.06 0 0
-        rotation -0.001907972780975674 0.0019079797047588762 0.9999963596200304 1.5708036408021389
+        rotation -0.0019079727809758317 0.0019079797047588376 0.9999963596200304 1.5708036408021384
         children [
           DEF WHEEL_SHAPE Shape {
             appearance PBRAppearance {
@@ -387,7 +387,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation -0.06 0 0
-        rotation -0.0019079727809753195 0.0019079797047583255 0.9999963596200304 1.57080364080214
+        rotation -0.0019079727809755166 0.0019079797047584048 0.9999963596200305 1.57080364080214
         children [
           USE WHEEL_SHAPE
         ]
