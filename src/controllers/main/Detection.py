@@ -3,6 +3,13 @@ import numpy as np
 
 class Detection(MyRobot):
 
+    def __init__(self):
+        #calls constructor for super class
+        super().__init__()
+        
+        #set origin/start point for robot
+        self.origin = [1.05, 1.05]
+
     def find_wall_distance(self, robot_position, robot_orientation, wall_position, wall_direction):
         #find the intersection of two 2D vector lines
         #return the distance from robot to given wall, positive if forwards and negative if backwards
@@ -27,7 +34,7 @@ class Detection(MyRobot):
         return lambda_solution[0][0]
         
 
-    def block_in_sight_2(self):
+    def block_in_sight(self):
         #Second iteration: return true if distance sensor less than wall distance
         #Must consider distance to all 4 walls
         #only accept walls infront of robot (positive distance) and choose minmum of the positive two
@@ -77,14 +84,6 @@ class Detection(MyRobot):
      
         #return true if the distance sensor value is less than the wall distance
         if self.distanceSensors[0].getValue() < 1000 * critical_wall_dist:
-            return True
-        else:
-            return False
-
-
-    def block_in_sight(self):
-        #First iteration: return true if distance sensor less than 1.5m
-        if self.distanceSensors[0].getValue() < 1500:
             return True
         else:
             return False

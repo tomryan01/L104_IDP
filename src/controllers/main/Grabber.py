@@ -2,11 +2,14 @@ from MyRobot import MyRobot
 
 class Grabber(MyRobot):
 
-    #def __init__(self):
-    #    #use counter for arm pick up
-    #    self.armCount = 0
-    #    #arm position: 0 if no block, 1 if holding block up, 2 if moving block up, 3 if moving block down
-    #    self.armsPosition = 0
+    def __init__(self):
+        #calls constructor for parent class
+        super().__init__()
+        
+        #use counter for arm pick up
+        self.armCount = 0
+        #arm position: 0 if no block, 1 if holding block up, 2 if moving block up, 3 if moving block down
+        self.armsPosition = 0
 
     def pick_up(self):
         #set target position as 2 pi radians so block is picked up
