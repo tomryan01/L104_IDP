@@ -8,7 +8,7 @@ class Detection(MyRobot):
         super().__init__()
         
         #set origin/start point for robot
-        self.origin = [1.05, 1.05]
+        self.origin = [1, 1]
 
     def find_wall_distance(self, robot_position, robot_orientation, wall_position, wall_direction):
         #find the intersection of two 2D vector lines
@@ -98,3 +98,7 @@ class Detection(MyRobot):
             return True
         else:
             return False
+    
+    def get_distance(self):
+        #return true if distance sensor value in mm
+        return self.distanceSensors[0].getValue()
