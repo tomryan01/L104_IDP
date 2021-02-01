@@ -8,7 +8,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
     def findBlocks(self):
         #main block finding algorithm
         #If there is no block within range, spin
-        if not(self.block_in_sight()):
+        if not(self.block_in_sight_2()):
             self.spin(1, 1)
         #When block seen, drive forwards unless block close enough to pick up
         elif not(self.block_in_distance()):
