@@ -5,10 +5,14 @@ from Grabber import Grabber
 
 class Behaviour(Detection, Drive, Gps, Grabber):
 
+    def __init__(self):
+        #use to store distance from start of a found block
+        self.blockOriginalDistance = 0
+
     def findBlocks(self):
         #main block finding algorithm
         #If there is no block within range, spin
-        if not(self.block_in_sight()):
+        if not(self.block_in_sight_2()):
             self.spin(1, 1)
         #When block seen, drive forwards unless block close enough to pick up
         elif not(self.block_in_distance()):
