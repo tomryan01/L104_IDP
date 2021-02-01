@@ -94,8 +94,8 @@ class Detection(MyRobot):
 
 
     def block_in_distance(self):
-        #return true if distance sensor less than 2cm
-        if self.distanceSensors[0].getValue() < 20:
+        #return true if distance sensor less than 2.2cm
+        if self.distanceSensors[0].getValue() < 22:
             return True
         else:
             return False
