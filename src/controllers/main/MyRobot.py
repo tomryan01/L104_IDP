@@ -23,18 +23,6 @@ class MyRobot:
         self.numColourSensors = 1
         self.numGps = 2
 
-        #set origin/start point for robot
-        self.origin = [1.05, 1.05]
-
-        #use to store distance from start of a found block
-        self.blockOriginalDistance = 0
-
-        #use counter for arm pick up
-        self.armCount = 0
-        #arm position: 0 if no block, 1 if holding block up, 2 if moving block up, 3 if moving block down
-        self.armsPosition = 0
-
-
     #The following methods are used to set up the devices for a robot
     #Each method begins by asserting the length of names in the list
     #Is the number of sensors specified
