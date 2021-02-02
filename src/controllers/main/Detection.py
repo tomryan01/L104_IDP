@@ -89,8 +89,9 @@ class Detection(MyRobot):
             return False
 
     def block_colour(self):
-        pass
-
+        cameraData = self.colourSensors[0].getImage()
+        red = self.colourSensors[0].imageGetRed(cameraData, self.colourSensors[0].getWidth(), 0, 0)
+        return red
 
     def block_in_distance(self):
         #return true if distance sensor less than 2.2cm
