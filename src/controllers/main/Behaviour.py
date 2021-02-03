@@ -2,6 +2,7 @@ from Detection import Detection
 from Drive import Drive
 from Gps import Gps
 from Grabber import Grabber
+from Communication import Communication
 
 class Behaviour(Detection, Drive, Gps, Grabber):
 
@@ -12,46 +13,90 @@ class Behaviour(Detection, Drive, Gps, Grabber):
         #use to store distance from start of a found block
         self.blockOriginalDistance = 0
 
+        #Set initial state
+        self.state = [0,1]
+
+
     def findBlocks(self):
-        #main block finding algorithm
-        #If there is no block within range, spin
-        if not(self.block_in_sight()) or (abs(self.direction_from_start()) < 1 and self.armsPosition == 0):
-            #print("a")
-            if self.get_distance() < 55:
-                self.backwards(5)
-            else:
-                self.spin(1, 1)
-        #When block seen, drive forwards unless block close enough to pick up
-        elif not(self.block_in_distance()):
-            #print("b")
+        "main block finding algorithm"
+        #print(self.state)
+
+        #initial spin at the base
+        if(self.state == [0,1]):
+            self.spin(0.75, 1)
+            if(self.block_in_sight()): #and not (self.distance_inside_friend_corner())):
+                self.state[1] += 1
+        #initially go forwards towards block
+        elif(self.state == [0,2]):
             self.forwards(5)
-        #If arms are down, or moving up then pick up the block and record its position
-        elif self.armsPosition == 0 or self.armsPosition == 2:
-            #print("c")
-            self.pick_up()
-            self.blockOriginalDistance = self.distance_from_start()
-        #When block picked up, reverse until travelled 25% of the way
-        elif not(self.distance_from_start() < 0.75*self.blockOriginalDistance):
-            #print("d")
+            if(self.block_in_colour_sensor_range()):
+                if(self.block_colour() > 70):
+                    self.state = [1,1]
+                else:
+                    self.state = [2,1]
+        #keep going forwards, because found block is red
+        elif(self.state == [1,1]):
+            self.forwards(5)
+            if(self.block_in_distance()):
+                self.state[1] += 1
+        #pick up block
+        elif(self.state == [1,2]):
+            if(self.block_in_distance()):
+                self.pick_up()
+            else:
+                self.state = [1,1]
+            if(self.armsPosition == 1):
+                self.state[1] += 1
+                self.blockOriginalDistance = self.distance_from_start()
+        #reverse 10% of the distance travelled
+        elif(self.state == [1,3]):
             self.backwards(5)
-        #When past 30% of the way, ensure robot is facing origin
-        elif not(abs(self.direction_from_start()) < 0.08):
-            #print("e")
-            #spin the correct direction, positive is turn right
-            #important for later corrections
+            if(self.distance_from_start() < 0.9*self.blockOriginalDistance):
+                if(self.get_distance() < 40):
+                    self.state[1] += 1
+                else:
+                    self.state[1] = 1
+        #spin 180 degrees to face back towards start
+        elif(self.state == [1,4]):
             if self.direction_from_start() > 0:
                 self.spin(1, 1)
             else:
                 self.spin(1, -1)
-        #Keep going forward until it returns to start
-        elif self.distance_from_start() > 0.01:
-            #print("f")
-            self.forwards(5)
-        #When at the start put block down until arms in down position
-        elif self.armsPosition == 1 or self.armsPosition == 3:
-            #print("g")
+            if(abs(self.direction_from_start()) < 0.1):
+                self.state[1] += 1
+        #go forwards towards start
+        elif(self.state == [1,5]):
+            #continous course correction
+            if(abs(self.direction_from_start()) < 0.1):
+                self.forwards(5)
+            elif self.direction_from_start() > 0:
+                self.spin(1, 1)
+            else:
+                self.spin(1, -1)
+            if(self.distance_from_start() < 0.05):
+                self.state[1] += 1
+        #put the block down at the start
+        elif(self.state == [1,6]):
             self.put_down()
-
-        
-        
-
+            if(self.armsPosition == 0):
+                self.state[1] += 1
+        #reverse slightly so as not to spin block around
+        elif(self.state == [1,7]):
+            self.backwards(5)
+            if(self.distance_from_start() > 0.1):
+                self.state[1] += 1
+        #spin until facing out of start position
+        elif(self.state == [1,8]):
+            self.spin(1, 1)
+            if(abs(self.direction_from_start() > 0.8)):
+                self.state = [0,1]
+        #reverse after detecting blue block
+        elif(self.state == [2,1]):
+            self.backwards(5)
+            if(self.distance_from_start() < 0.1):
+                self.state[1] += 1
+        #spin until blue block is no longer in sight
+        elif(self.state == [2,2]):
+            self.spin(1, 1)
+            if(not(self.block_in_sight())):
+                self.state = [0,1]
