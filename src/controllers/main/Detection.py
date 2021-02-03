@@ -93,7 +93,6 @@ class Detection(MyRobot):
         red = self.colourSensors[0].imageGetRed(cameraData, self.colourSensors[0].getWidth(), 0, 0)
         return red
 
-
     def block_in_distance(self):
         "return true if distance sensor less than 2.2cm"
         if self.distanceSensors[0].getValue() < 22:
@@ -101,19 +100,16 @@ class Detection(MyRobot):
         else:
             return False
 
-    
     def block_in_colour_sensor_range(self):
-        "return true if distance sensor less than 10cm"
+        #return true if distance sensor less than 10cm
         if self.distanceSensors[0].getValue() < 100:
             return True
         else:
             return False
 
-
     def get_distance(self):
         "return true if distance sensor value in mm"
         return self.distanceSensors[0].getValue()
-
 
     def distance_inside_friend_corner(self):
         "return True if distance measured is inside the friend robot region"
@@ -185,5 +181,3 @@ class Detection(MyRobot):
             coordinate_seen.append(distance_seen * norm_robot_orientation[i] + front_position_xz[i])
         
         return coordinate_seen
-
-

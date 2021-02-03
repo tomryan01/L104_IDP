@@ -52,7 +52,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
         elif(self.state == [1,3]):
             self.backwards(5)
             if(self.distance_from_start() < 0.9*self.blockOriginalDistance):
-                if(self.get_distance() < 40):
+                if(self.block_colour() > 70):
                     self.state[1] += 1
                 else:
                     self.state[1] = 1
@@ -66,13 +66,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
                 self.state[1] += 1
         #go forwards towards start
         elif(self.state == [1,5]):
-            #continous course correction
-            if(abs(self.direction_from_start()) < 0.1):
-                self.forwards(5)
-            elif self.direction_from_start() > 0:
-                self.spin(1, 1)
-            else:
-                self.spin(1, -1)
+            self.forwards(5)
             if(self.distance_from_start() < 0.05):
                 self.state[1] += 1
         #put the block down at the start
