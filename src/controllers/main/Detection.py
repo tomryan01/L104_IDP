@@ -99,3 +99,10 @@ class Detection(MyRobot):
             return True
         else:
             return False
+
+    def block_in_colour_sensor_range(self):
+        #return true if distance sensor less than 10cm
+        if self.distanceSensors[0].getValue() < 100:
+            return True
+        else:
+            return False
