@@ -18,7 +18,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
         #main block finding algorithm
         #initial spin at the base
         if(self.state == [0,1]):
-            self.spin(1, 1)
+            self.spin(0.75, 1)
             if(self.block_in_sight()):
                 self.state[1] += 1
         #initially go forwards towards block
@@ -36,10 +36,13 @@ class Behaviour(Detection, Drive, Gps, Grabber):
                 self.state[1] += 1
         #pick up block
         elif(self.state == [1,2]):
-            self.pick_up()
-            self.blockOriginalDistance = self.distance_from_start()
-            if(self.armsPosition == 1):
-                self.state[1] += 1
+            if(self.block_in_distance()):
+                self.pick_up()
+                if(self.armsPosition == 1):
+                    self.state[1] += 1
+                    self.blockOriginalDistance = self.distance_from_start()
+            else:
+                self.state = [1,1]
         #reverse 10% of the distance travelled
         elif(self.state == [1,3]):
             self.backwards(5)
@@ -74,7 +77,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
         #spin until facing out of start position
         elif(self.state == [1,8]):
             self.spin(1, 1)
-            if(abs(self.direction_from_start() > 1.57)):
+            if(abs(self.direction_from_start() > 0.8)):
                 self.state = [0,1]
         #reverse after detecting blue block
         elif(self.state == [2,1]):
