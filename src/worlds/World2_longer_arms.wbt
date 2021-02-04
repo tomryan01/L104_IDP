@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5771750490764339 0.5767156110482189 0.578159205320555 4.186363972250046
-  position 0.015012985299249246 4.62330977883911 0.04151675584318841
+  orientation 0.5732971055483012 0.584413428845827 0.5742746494096737 4.197868822589545
+  position -0.07755445096094332 4.633233063324782 0.0413590510297871
 }
 TexturedBackground {
 }
@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation 0.832764 0.05 -1.30452
+  translation 0.04356 0.05 0.241414
   rotation 0 1 0 4.692820414042842e-06
   children [
     DEF BOX_R Shape {
@@ -51,7 +51,7 @@ DEF Block_R1 Solid {
   }
 }
 DEF Block_R2 Solid {
-  translation -0.140599 0.05 -0.200348
+  translation 0.660408 0.05 -0.136531
   children [
     USE BOX_R
   ]
@@ -62,7 +62,8 @@ DEF Block_R2 Solid {
   }
 }
 DEF Block_R3 Solid {
-  translation 0.753219 0.05 -1.30632
+  translation -0.0412268 0.02 -0.575945
+  rotation 0 1 0 -1.047195307179586
   children [
     USE BOX_R
   ]
@@ -72,7 +73,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation 0.679798 0.05 -1.3028
+  translation -0.533452 0.05 0.517746
   children [
     USE BOX_R
   ]
@@ -82,7 +83,7 @@ DEF Block_R4 Solid {
   }
 }
 DEF Block_B1 Solid {
-  translation 0.905986 0.05 -1.30599
+  translation 0.223544 0.05 -0.954707
   children [
     DEF BOX_B Shape {
       appearance PBRAppearance {
@@ -100,7 +101,7 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation 1.11701 0.05 -1.30109
+  translation 1.09619 0.05 -0.684016
   children [
     USE BOX_B
   ]
@@ -110,7 +111,7 @@ DEF Block_B2 Solid {
   }
 }
 DEF Block_B3 Solid {
-  translation 1.0483 0.05 -1.30178
+  translation -0.410756 0.05 0.877473
   children [
     USE BOX_B
   ]
@@ -120,7 +121,7 @@ DEF Block_B3 Solid {
   }
 }
 DEF Block_B4 Solid {
-  translation 0.977734 0.05 -1.30557
+  translation -0.12241 0.05 -0.153813
   children [
     USE BOX_B
   ]
@@ -200,7 +201,7 @@ DEF WALL_4 Solid {
   boundingObject USE WALL_SHAPE
 }
 DEF TWO_WHEEL_ROBOT Robot {
-  translation 1 0.042 1
+  translation 0.95 0.042 0.95
   rotation 0 1 0 0.000796322
   children [
     GPS {
@@ -317,31 +318,6 @@ DEF TWO_WHEEL_ROBOT Robot {
       translation 0 0 0.1
       name "gps_front"
     }
-    DEF DS_RIGHT DistanceSensor {
-      translation -0.03 0 0.1
-      rotation 0 1 0 -1.87079
-      children [
-        DEF DS_box_shape Shape {
-          appearance PBRAppearance {
-            baseColor 0.639 0.757 0.678
-            roughness 1
-            metalness 0
-          }
-          geometry Box {
-            size 0.01 0.01 0.01
-          }
-        }
-      ]
-      name "ds_right"
-    }
-    DEF DS_LEFT DistanceSensor {
-      translation 0.03 0 0.1
-      rotation 0 1 0 -1.27079
-      children [
-        USE DS_box_shape
-      ]
-      name "ds_left"
-    }
     DEF Wheel1 HingeJoint {
       jointParameters HingeJointParameters {
         anchor 0.06 0 0
@@ -354,7 +330,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation 0.06 0 0
-        rotation -0.001907972780975674 0.0019079797047588762 0.9999963596200304 1.5708036408021389
+        rotation -0.0019079727809759098 0.0019079797047587587 0.9999963596200304 1.5708036408021384
         children [
           DEF WHEEL_SHAPE Shape {
             appearance PBRAppearance {
@@ -387,7 +363,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation -0.06 0 0
-        rotation -0.0019079727809753195 0.0019079797047583255 0.9999963596200304 1.57080364080214
+        rotation -0.001907972780975871 0.0019079797047585627 0.9999963596200304 1.5708036408021377
         children [
           USE WHEEL_SHAPE
         ]
