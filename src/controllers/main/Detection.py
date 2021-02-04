@@ -11,9 +11,9 @@ class Detection(MyRobot):
         self.origin = [1.05, 1.05]
 
     def find_wall_distance(self, robot_position, robot_orientation, wall_position, wall_direction):
-        #find the intersection of two 2D vector lines
-        #return the distance from robot to given wall, positive if forwards and negative if backwards
-        #robot orientation should be a unit vector
+        """find the intersection of two 2D vector lines
+        return the [distance from robot to given wall, distance along wall], positive if forwards and negative if backwards
+        robot orientation should be a unit vector"""
 
         #form matrix of coeficients
         coef_matrix = np.array([[robot_orientation[0], -1*wall_direction[0]],
@@ -28,14 +28,14 @@ class Detection(MyRobot):
 
         #vector lambda_solution = (lambda_robot, lambda_wall)
         #lambda_robot is the distance, if orientation was a unit vector
-        lambda_solution = inverse_coef_matrix.dot(position_vector)
+        lambda_solutions = inverse_coef_matrix.dot(position_vector)
 
         #return distance found
-        return lambda_solution[0][0]
+        return [lambda_solutions[0][0], lambda_solutions[1][0]]
         
 
     def block_in_sight(self):
-        #Second iteration: return true if distance sensor less than wall distance
+        "Return true if distance sensor less than wall distance, block is closer than the wall"
         #Must consider distance to all 4 walls
         #only accept walls infront of robot (positive distance) and choose minmum of the positive two
         #all vectors are (x, z)
@@ -51,10 +51,8 @@ class Detection(MyRobot):
         wall_4_direction = [1, 0]
 
         #Find position of the robot, will use front position for finding distance
-        front_position_xyz = self.gpsSensors[0].getValues()
-        mid_position_xyz = self.gpsSensors[1].getValues()
-        front_position_xz = [front_position_xyz[0], front_position_xyz[2]]
-        mid_position_xz = [mid_position_xyz[0], mid_position_xyz[2]]
+        front_position_xz = self.front_position()
+        mid_position_xz = self.mid_position()
 
         #Find orientation of the robot
         robot_orientation = []
@@ -71,7 +69,7 @@ class Detection(MyRobot):
         dist_wall_4 = self.find_wall_distance(front_position_xz, norm_robot_orientation, wall_4_position, wall_4_direction)
 
         #store distances in an array
-        wall_distances = [dist_wall_1, dist_wall_2, dist_wall_3, dist_wall_4]
+        wall_distances = [dist_wall_1[0], dist_wall_2[0], dist_wall_3[0], dist_wall_4[0]]
 
         #extract positive distances
         positive_wall_dists = []
@@ -88,21 +86,55 @@ class Detection(MyRobot):
         else:
             return False
 
-    def block_colour(self):
+
+    def red_colour(self):
+        "return the level of red recieved by the colour sensor"
         cameraData = self.colourSensors[0].getImage()
         red = self.colourSensors[0].imageGetRed(cameraData, self.colourSensors[0].getWidth(), 0, 0)
         return red
+    
+    def blue_colour(self):
+        "return the level of blue recieved by the colour sensor"
+        cameraData = self.colourSensors[0].getImage()
+        blue = self.colourSensors[0].imageGetBlue(cameraData, self.colourSensors[0].getWidth(), 0, 0)
+        return blue
+
 
     def block_in_distance(self):
-        #return true if distance sensor less than 2.2cm
+        "return true if distance sensor less than 2.2cm"
         if self.distanceSensors[0].getValue() < 22:
             return True
         else:
             return False
 
+
     def block_in_colour_sensor_range(self):
-        #return true if distance sensor less than 10cm
+        "return true if distance sensor less than 10cm"
         if self.distanceSensors[0].getValue() < 100:
             return True
         else:
             return False
+
+
+    def get_distance(self):
+        "return true if distance sensor value in mm"
+        return self.distanceSensors[0].getValue()
+    
+    
+    def coordinate_looking_at(self):
+        "return the coordinate of the thing in the vision sensor"
+
+        #Find position of the robot, will use front position for finding distance
+        front_position_xz = self.front_position()
+
+        #Find orientation of the robot
+        norm_robot_orientation = self.norm_robot_orientation()
+
+        #get distance seen by sensor
+        distance_seen = self.distanceSensors[0].getValue() / 1000
+
+        coordinate_seen = []
+        for i in range(2):
+            coordinate_seen.append(distance_seen * norm_robot_orientation[i] + front_position_xz[i])
+        
+        return coordinate_seen
