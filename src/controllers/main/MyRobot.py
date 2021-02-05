@@ -14,6 +14,8 @@ class MyRobot:
         self.distanceSensors = []
         self.colourSensors = []
         self.gpsSensors = []
+        self.emitter = []
+        self.receiver = []
 
         #constants for how many of each device
         #TO CHANGE THE NUMBER OF DEVICES THESE ARE THE ONLY NUMBER THAT SHOULD BE CHANGED WITHIN THIS CLASS
@@ -22,6 +24,8 @@ class MyRobot:
         self.numDistanceSensors = 1
         self.numColourSensors = 1
         self.numGps = 2
+        self.numEmitters = 1
+        self.numReceivers = 1
 
     #The following methods are used to set up the devices for a robot
     #Each method begins by asserting the length of names in the list
@@ -57,6 +61,17 @@ class MyRobot:
             self.gpsSensors.append(self.robot.getDevice(gpsSensors[i]))
             self.gpsSensors[i].enable(timeStep)
 
+    def setEmitter(self, emitterName):
+        assert len(emitterName) == self.numEmitters
+        for i in range(self.numEmitters):
+            self.emitter.append(self.robot.getDevice(emitterName[i]))
+    
+    def setReceiver(self, receiverName, samplingPeriod):
+        assert len(receiverName) == self.numReceivers
+        for i in range(self.numReceivers):
+            self.receiver.append(self.robot.getDevice(receiverName[i]))
+            self.receiver[i].enable(samplingPeriod)
+            
     def reset(self):
         self.wheels[0].setVelocity(0)
         self.wheels[1].setVelocity(0)
