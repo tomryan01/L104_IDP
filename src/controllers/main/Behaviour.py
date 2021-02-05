@@ -18,6 +18,9 @@ class Behaviour(Detection, Drive, Gps, Grabber):
         #use to count to 4 blocks
         self.blocksDelivered = 0
 
+        #store location of blue blocks
+        self.blueLocations = []
+
     def findBlocks(self):
         "main block finding algorithm"
         #print(self.state)
@@ -26,7 +29,8 @@ class Behaviour(Detection, Drive, Gps, Grabber):
         if(self.state == [0,1]):
             self.spin(1, 1)
             if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at()))):
-                self.state[1] += 1
+                if(not(self.looking_in_list(self.blueLocations))):
+                    self.state[1] += 1
         #initially go forwards towards block
         if(self.state == [0,2]):
             self.forwards(5)
@@ -40,6 +44,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
                 else:
                     self.state = [2,1]
                     self.blockOriginalDistance = self.distance_from_start()
+                    self.blueLocations.append(self.coordinate_looking_at())
         #keep going forwards, because found block is red
         if(self.state == [1,1]):
             self.forwards(5)
