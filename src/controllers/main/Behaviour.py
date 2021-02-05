@@ -2,8 +2,9 @@ from Detection import Detection
 from Drive import Drive
 from Gps import Gps
 from Grabber import Grabber
+from Communication import Communication
 
-class Behaviour(Detection, Drive, Gps, Grabber):
+class Behaviour(Detection, Drive, Gps, Grabber, Communication):
 
     def __init__(self):
         #calls constructor for parent class
@@ -21,16 +22,23 @@ class Behaviour(Detection, Drive, Gps, Grabber):
         #store location of blue blocks
         self.blueLocations = []
 
+        
     def findBlocks(self):
         "main block finding algorithm"
         #print(self.state)
+
+        #must call this every time
+        self.emit_position()
+        #if not called then reciver queue fills up with old data
+        looking_at_friend = self.looking_at_my_friend()
 
         #initial spin at the base
         if(self.state == [0,1]):
             self.spin(1, 1)
             if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at()))):
-                if(not(self.looking_in_list(self.blueLocations))):
-                    self.state[1] += 1
+                if(not(self.looking_in_list(self.blueLocations)) and not(self.distance_inside_friend_corner())):
+                    if(not(looking_at_friend)):
+                        self.state[1] += 1
         #initially go forwards towards block
         if(self.state == [0,2]):
             self.forwards(5)
@@ -39,15 +47,19 @@ class Behaviour(Detection, Drive, Gps, Grabber):
             if(not(self.block_in_sight()) and self.back_distance_from_start() > 0.5):
                 self.state = [2, 2]
             if(self.block_in_colour_sensor_range()):
-                if(self.red_colour() > self.blue_colour() + 40):
+                if(self.red_colour() > self.blue_colour() + 20):
                     self.state = [1,1]
                 else:
                     self.state = [2,1]
                     self.blockOriginalDistance = self.distance_from_start()
                     self.blueLocations.append(self.coordinate_looking_at())
+            if(looking_at_friend):
+                self.state = self.state = [2,2]
         #keep going forwards, because found block is red
         if(self.state == [1,1]):
             self.forwards(5)
+            if(not(self.block_in_sight())):
+                self.state = [1,10]
             if(self.block_in_distance()):
                 self.state[1] += 1
         #pick up block
@@ -57,7 +69,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
                 if(self.armsPosition == 1):
                     self.state[1] += 1
                     self.blockOriginalDistance = self.distance_from_start()
-            else:
+            elif(self.get_distance() < 50):
                 self.state = [1,1]
         #reverse 10% of the distance travelled
         if(self.state == [1,3]):
@@ -66,7 +78,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
                 if(self.get_distance() < 40):
                     self.state[1] += 1
                 else:
-                    self.state[1] = 1
+                    self.state = [1,10]
         #spin 180 degrees to face back towards start
         if(self.state == [1,4]):
             if(self.direction_from_start() > 0):
@@ -90,13 +102,18 @@ class Behaviour(Detection, Drive, Gps, Grabber):
             if(self.armsPosition == 0):
                 self.state[1] += 1
                 self.blocksDelivered += 1
-                if self.blocksDelivered == 4:
+                if self.blocksDelivered >= 4:
                     self.state = [3,1]
         #reverse slightly so as not to spin block around
         if(self.state == [1,7]):
             self.backwards(5)
             if(self.get_distance() > 55):
                 self.state = [0,1]
+        #if he tried to pick up a block and failed put arms down
+        if(self.state == [1,10]):
+            self.put_down()
+            if(self.armsPosition == 0):
+                self.state = [2,2]
         #reverse back after detecting blue block
         if(self.state == [2,1]):
             self.backwards(5)
