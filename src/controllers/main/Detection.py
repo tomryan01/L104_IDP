@@ -168,10 +168,6 @@ class Detection(MyRobot):
         
         #distance seen by sensor
         distance_seen = self.get_distance() / 1000
-        #print('distance seen', distance_seen)
-        #print('distance between', dist_between)
-        #print('dot product', dot_product, 'critical theta', critical_cos_theta)
-        #return true if looking at friend
         if abs(dot_product) > critical_cos_theta and dot_product > 0:
             if (distance_seen > dist_between + 0.05) or (distance_seen < dist_between - 0.05):
                 return False
