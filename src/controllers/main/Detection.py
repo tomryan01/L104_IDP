@@ -187,3 +187,56 @@ class Detection(MyRobot):
             return True
         else:
             return False
+    
+    
+    def distance_inside_friend_corner(self):
+        "return True if distance measured is inside the friend robot region"
+
+        #Define the 2 boundaries
+        wall_1_position = [0.8, -0.8]
+        wall_1_direction = [1, 0]
+        wall_2_position = [0.8, -0.8]
+        wall_2_direction = [0, -1]
+
+        #Find position of the robot, will use front position for finding distance
+        front_position_xz = self.front_position()
+
+        #Find normalised orientation of the robot
+        norm_robot_orientation = self.norm_robot_orientation()
+
+        #find distance to each wall and distance along each wall [distance to, distance along]
+        dist_wall_1 = self.find_wall_distance(front_position_xz, norm_robot_orientation, wall_1_position, wall_1_direction)
+        dist_wall_2 = self.find_wall_distance(front_position_xz, norm_robot_orientation, wall_2_position, wall_2_direction)
+
+        #store distances in an array
+        wall_distances = [dist_wall_1, dist_wall_2]
+
+        #extract distance to wall if looking at the correct part of wall
+        true_wall_dist = []
+        for i in range(2):
+            if wall_distances[i][1] >= 0 and wall_distances[i][1] <= 0.4:
+                if wall_distances[i][0] > 0:
+                    true_wall_dist.append(wall_distances[i][0])
+
+        #return false if nothing added to true walls
+        if len(true_wall_dist) == 0:
+            return False
+        
+        #if 2 items in walls then looking through area and compare to max
+        if len(true_wall_dist) == 2:
+            max_wall_dist = max(true_wall_dist)
+            min_wall_dist = min(true_wall_dist)
+            #if between then looking through
+            if self.distanceSensors[0].getValue() > 1000 * min_wall_dist and self.distanceSensors[0].getValue() < 1000 * max_wall_dist:
+                return True
+            else:
+                return False
+
+        #extract minimum wall distance
+        critical_wall_dist = min(true_wall_dist)
+        
+        #return true if the distance sensor value is looking into the arena
+        if self.distanceSensors[0].getValue() > 1000 * critical_wall_dist:
+            return True
+        else:
+            return False
