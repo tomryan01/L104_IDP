@@ -103,7 +103,7 @@ class Behaviour(Detection, Drive, Gps, Grabber):
                 self.spin(1, 1)
             else:
                 self.spin(1, -1)
-            if(abs(self.direction_away_from_start()) < 0.1):
+            if(abs(self.direction_away_from_start()) < 0.05):
                 self.state[1] += 1
         #reverse back home
         if(self.state == [2,3]):
