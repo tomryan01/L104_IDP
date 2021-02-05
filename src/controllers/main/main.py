@@ -14,6 +14,8 @@ testRobot.setArms(["arm_1", "arm_2"])
 testRobot.setDistanceSensors(["ds_mid"], TIME_STEP)
 testRobot.setColourSensors(["camera1"], TIME_STEP)
 testRobot.setGps(["gps_front", "gps_mid"], TIME_STEP)
+testRobot.setEmitter(["emitter"])
+testRobot.setReceiver(["receiver"], TIME_STEP)
 
 while testRobot.robot.step(TIME_STEP) != -1:
     #every single tick we call the reset method to
@@ -24,3 +26,10 @@ while testRobot.robot.step(TIME_STEP) != -1:
     
     testRobot.findBlocks()
 
+
+"""
+When copying for second robot, things that need to be changed are:
+Behaviour: block colour red/blue, spin direction x2
+Detection: origin position, friend corner wall definitions
+Gps: my box coordinate definitions
+"""
