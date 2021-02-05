@@ -68,34 +68,30 @@ class Behaviour(Detection, Drive, Gps, Grabber):
                 self.spin(1, 1)
             else:
                 self.spin(1, -1)
-            if(abs(self.direction_from_start()) < 0.1):
+            if(abs(self.direction_from_start()) < 0.05):
                 self.state[1] += 1
         #go forwards towards start
         if(self.state == [1,5]):
             #continous course correction
-            if(abs(self.direction_from_start()) < 0.1):
-                self.forwards(5)
-            elif(self.direction_from_start() > 0):
-                self.spin(1, 1)
-            elif(self.direction_from_start() < 0):
-                self.spin(1, -1)
-            self.forwards(5)
             if(self.distance_from_start() < 0.1):
                 self.state[1] += 1
+            elif(abs(self.direction_from_start()) < 0.05):
+                self.forwards(5)
+            else:
+                self.state[1] -= 1
         #put the block down at the start
         if(self.state == [1,6]):
             self.put_down()
             if(self.armsPosition == 0):
                 self.state[1] += 1
                 self.blocksDelivered += 1
+                if self.blocksDelivered == 4:
+                    self.state = [3,1]
         #reverse slightly so as not to spin block around
         if(self.state == [1,7]):
             self.backwards(5)
             if(self.get_distance() > 55):
-                if self.blocksDelivered == 4:
-                    self.state = [3,1]
-                else:
-                    self.state = [0,1]
+                self.state = [0,1]
         #reverse back after detecting blue block
         if(self.state == [2,1]):
             self.backwards(5)
@@ -119,21 +115,32 @@ class Behaviour(Detection, Drive, Gps, Grabber):
             self.spin(1, 1)
             if(not(self.block_in_sight())):
                 self.state = [0,1]
-        #drive home if collected all blocks
+        #reverse back if collected all blocks
         if(self.state == [3,1]):
-            if(self.mid_distance_from_start() > 0.1):
-                if(abs(self.direction_from_start()) < 0.05):
-                    self.forwards(1)
-                elif(self.direction_from_start() > 0):
-                    self.spin(1, 1)
-                elif(self.direction_from_start() < 0):
-                    self.spin(1,-1)
+            self.backwards(5)
+            if(self.distance_from_start() > 0.2):
+                self.state[1] += 1
+        #spin to face home
+        if(self.state == [3,2]):
+            if(self.direction_from_start() > 0):
+                self.spin(1, 1)
             else:
+                self.spin(1, -1)
+            if(abs(self.direction_from_start()) < 0.05):
+                self.state[1] += 1
+        #drive home
+        if(self.state == [3,3]):
+            if(abs(self.direction_from_start()) < 0.05):
+                self.forwards(3)
+            else:
+                self.state[1] -= 1
+            if(self.mid_distance_from_start() < 0.1):
                 self.state[1] += 1
         #finished
-        if(self.state == [3,2]):
+        if(self.state == [3,4]):
             self.reset()
-            
+        
+
         
             
 
