@@ -138,3 +138,56 @@ class Detection(MyRobot):
             coordinate_seen.append(distance_seen * norm_robot_orientation[i] + front_position_xz[i])
         
         return coordinate_seen
+    
+
+    def looking_at_coordinate(self, coordinate):
+        "return true if what you see on the distance sensor is the block at this coordinate"
+
+        #get position of front of robot
+        front_position_xz = self.front_position()
+        #get position of middle of robot
+        mid_position_xz = self.mid_position()
+
+        #find notmal orientation of robot in [x,z]
+        norm_robot_orientation = self.norm_robot_orientation()
+
+        #fiend direction of friend
+        coordinate_direction = []
+        for i in range(2):
+            coordinate_direction.append(coordinate[i] - mid_position_xz[i])
+        #normalise
+        norm_coordinate_direction = [coordinate_direction[i] / self.get_magnitude(coordinate_direction) for i in range(2)]
+        
+        #find out if they are parallel
+        dot_product = self.dot_product(norm_robot_orientation, norm_coordinate_direction)
+
+        #dot product is cos(angle between them) and we can calc the critical angle between them from the extreme case:
+        vector_between = [coordinate[i] - front_position_xz[i] for i in range(2)]
+        dist_between = self.get_magnitude(vector_between)
+        critical_cos_theta = dist_between / (dist_between**2 + 0.05**2)**0.5
+        
+        #distance seen by sensor
+        distance_seen = self.get_distance() / 1000
+        #print('distance seen', distance_seen)
+        #print('distance between', dist_between)
+        #print('dot product', dot_product, 'critical theta', critical_cos_theta)
+        #return true if looking at friend
+        if abs(dot_product) > critical_cos_theta and dot_product > 0:
+            if (distance_seen > dist_between + 0.05) or (distance_seen < dist_between - 0.05):
+                return False
+            else:
+                return True
+        else:
+            return False
+    
+
+    def looking_in_list(self, coordinate_list):
+        "return true if looking at any coordinate in a list"
+        
+        #list of true/false
+        true_false_list = [self.looking_at_coordinate(coordinate_list[i]) for i in range(len(coordinate_list))]
+
+        if True in true_false_list:
+            return True
+        else:
+            return False
