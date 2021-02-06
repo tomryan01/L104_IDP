@@ -8,7 +8,7 @@ class Detection(MyRobot):
         super().__init__()
         
         #set origin/start point for robot
-        self.origin = [1, 1]
+        self.origin = [1, -1]
 
     def find_wall_distance(self, robot_position, robot_orientation, wall_position, wall_direction):
         """find the intersection of two 2D vector lines
@@ -193,10 +193,10 @@ class Detection(MyRobot):
         "return True if distance measured is inside the friend robot region"
 
         #Define the 2 boundaries
-        wall_1_position = [0.8, -0.8]
+        wall_1_position = [0.8, 0.8]
         wall_1_direction = [1, 0]
-        wall_2_position = [0.8, -0.8]
-        wall_2_direction = [0, -1]
+        wall_2_position = [0.8, 0.8]
+        wall_2_direction = [0, 1]
 
         #Find position of the robot, will use front position for finding distance
         front_position_xz = self.front_position()

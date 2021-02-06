@@ -34,7 +34,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
 
         #initial spin at the base
         if(self.state == [0,1]):
-            self.spin(1, 1)
+            self.spin(1, -1)
             if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at()))):
                 if(not(self.looking_in_list(self.blueLocations)) and not(self.distance_inside_friend_corner())):
                     if(not(looking_at_friend)):
@@ -47,7 +47,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(not(self.block_in_sight()) and self.back_distance_from_start() > 0.5):
                 self.state = [2, 2]
             if(self.block_in_colour_sensor_range()):
-                if(self.red_colour() > self.blue_colour() + 20):
+                if(self.blue_colour() > self.red_colour() + 20):
                     self.state = [1,1]
                 else:
                     self.state = [2,1]
@@ -134,7 +134,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
         #spin until blue block is no longer in sight
         if(self.state == [2,4]):
-            self.spin(1, 1)
+            self.spin(1, -1)
             if(not(self.block_in_sight())):
                 self.state = [0,1]
         #reverse back if collected all blocks
