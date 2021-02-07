@@ -126,6 +126,12 @@ class Gps(MyRobot):
             else:
                 directionFromStart =  (-math.pi - math.asin(cross_product))
         
+        #TODO: Just make a pi constant already
+        if(directionFromStart < -3.1416):
+            directionFromStart += 6.2832
+        elif(directionFromStart > 3.1416):
+            directionFromStart -= 6.2832
+
         return directionFromStart
 
 
