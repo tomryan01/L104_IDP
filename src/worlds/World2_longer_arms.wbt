@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation 1.07386 0.05 -0.155847
+  translation 0.080515 0.05 -1.386
   rotation 0 1 0 4.692820414042842e-06
   children [
     DEF BOX_R Shape {
@@ -51,7 +51,7 @@ DEF Block_R1 Solid {
   }
 }
 DEF Block_R2 Solid {
-  translation 0.509842 0.05 0.0668601
+  translation 0.319965 0.05 0.687352
   children [
     USE BOX_R
   ]
@@ -62,7 +62,7 @@ DEF Block_R2 Solid {
   }
 }
 DEF Block_R3 Solid {
-  translation -0.66907 0.02 -0.333503
+  translation -0.253364 0.02 -1.51627
   rotation 0 1 0 -1.5707953071795862
   children [
     USE BOX_R
@@ -73,7 +73,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation -0.75961 0.05 0.149661
+  translation -0.379436 0.05 -1.38609
   children [
     USE BOX_R
   ]
@@ -83,7 +83,7 @@ DEF Block_R4 Solid {
   }
 }
 DEF Block_B1 Solid {
-  translation -0.605675 0.05 1.02937
+  translation 0.418491 0.05 0.67469
   children [
     DEF BOX_B Shape {
       appearance PBRAppearance {
@@ -101,7 +101,7 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation -1.08296 0.05 -0.747544
+  translation -0.470738 0.05 -1.53856
   rotation 0 -1 0 1.5708
   children [
     USE BOX_B
@@ -112,7 +112,7 @@ DEF Block_B2 Solid {
   }
 }
 DEF Block_B3 Solid {
-  translation -0.576311 0.05 0.0373909
+  translation 0.114411 0.05 -1.53416
   children [
     USE BOX_B
   ]
@@ -122,7 +122,7 @@ DEF Block_B3 Solid {
   }
 }
 DEF Block_B4 Solid {
-  translation -0.112837 0.05 -1.01081
+  translation -0.106717 0.05 -1.35664
   children [
     USE BOX_B
   ]
@@ -450,7 +450,7 @@ DEF TWO_WHEEL_ROBOT Robot {
   controller "main"
 }
 DEF TWO_WHEEL_ROBOT Robot {
-  translation 0.95 0.042 -0.95
+  translation 0.657937 0.042 -1.46642
   rotation 0 1 0 3.141592653589793
   children [
     GPS {
@@ -579,7 +579,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation 0.06 0 0
-        rotation -0.0019079727809773253 0.0019079797047590358 0.9999963596200304 1.5708036408021362
+        rotation -0.0019079727809775222 0.0019079797047590365 0.9999963596200305 1.5708036408021355
         children [
           DEF WHEEL_SHAPE Shape {
             appearance PBRAppearance {
@@ -612,7 +612,7 @@ DEF TWO_WHEEL_ROBOT Robot {
       ]
       endPoint Solid {
         translation -0.06 0 0
-        rotation -0.0019079727809769346 0.0019079797047586843 0.9999963596200305 1.570803640802134
+        rotation -0.0019079727809769742 0.0019079797047586455 0.9999963596200304 1.570803640802134
         children [
           USE WHEEL_SHAPE
         ]
