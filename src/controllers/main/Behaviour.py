@@ -3,6 +3,7 @@ from Drive import Drive
 from Gps import Gps
 from Grabber import Grabber
 from Communication import Communication
+import math
 
 class Behaviour(Detection, Drive, Gps, Grabber, Communication):
 
@@ -13,6 +14,18 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #use to store distance from start of a found block
         self.blockOriginalDistance = 0
 
+        #distance of a detected block
+        self.blockFoundDistance = 0
+
+        #orientation of block that has just been avoided
+        self.directionBlockJustAvoided = 0
+
+        #used to store direction facing when first finding a block
+        self.blockFoundOrientation = 0
+
+        #used to temporarily store additionally found blocks
+        self.tempFoundBlocks = []
+
         #use for knowledge of state
         self.state = [0,1]
 
@@ -22,7 +35,34 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #store location of blue blocks
         self.blueLocations = []
 
-        
+    def checkCollision(self, values, blockDistance):
+        #values should be a list of lists of length 2 in the form [distance, orientation]
+        print("Values:",len(values))
+        for v in values:
+            if(v[0] * math.sin(v[1]) < self.robotWidth/2):
+                if(v[0] < blockDistance):
+                    print(v[0], blockDistance)
+                    return True
+        return False
+
+    def findRelativeDirection(self, dir1, dir2):
+        #returns acute angle between two directions
+        if(abs(dir1) < 1.571 and abs(dir2) < 1.571):
+            #print("a")
+            result = abs(dir1-dir2)
+        elif((dir1 < 0 and dir2 > 0)):
+            #print("b")
+            result = abs((3.14+dir1) + (3.14-dir2))
+        elif((dir1 > 0 and dir2 < 0)):
+            #print("c")
+            result = abs((3.14-dir1) + (3.14+dir2))
+        else:
+            #print("d")
+            result = abs(dir1-dir2)
+        #print("%a : %f : %s\n" % (dir1, dir2, result))
+        #print(result)
+        return result
+
     def findBlocks(self):
         "main block finding algorithm"
         #print(self.state)
@@ -33,14 +73,53 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         looking_at_friend = self.looking_at_my_friend()
 
         #initial spin at the base
+        #print(self.state[1])
         if(self.state == [0,1]):
             self.spin(1, 1)
             if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at()))):
                 if(not(self.looking_in_list(self.blueLocations)) and not(self.distance_inside_friend_corner())):
                     if(not(looking_at_friend)):
-                        self.state[1] += 1
-        #initially go forwards towards block
+                        #doesn't go for same block again
+                        if(abs(self.directionBlockJustAvoided - self.direction_from_start()) > 0.2):
+                            self.blockFoundOrientation = self.direction_from_start()
+                            self.blockFoundDistance = self.get_distance()
+                            self.directionBlockJustAvoided = 0
+                            self.state[1] += 1
+                        #print("block found!")
+        #keep spinning to check robot won't crash into another block on the way
         if(self.state == [0,2]):
+            self.spin(1,1)
+            relative_orientation = self.findRelativeDirection(self.blockFoundOrientation, self.direction_from_start())
+            #print(relative_orientation)
+            #spins 45 degrees
+            if(relative_orientation > 0.79):
+                self.state[1] += 1
+            elif(self.block_in_sight()):
+                can_append = False
+                #ensure no block is counted twice
+                if(abs(self.get_distance() - self.blockFoundDistance) > 50):
+                    can_append = True
+                    for v in self.tempFoundBlocks:
+                        if(abs(self.get_distance() - v[0]) < 50):
+                            can_append = False
+                if(can_append):
+                    #add distance, and relative orientation of newly found block
+                    self.tempFoundBlocks.append([self.get_distance(), abs(relative_orientation)])
+        #spin back to first block found
+        if(self.state == [0,3]):
+            self.spin(1, -1)
+            relative_orientation = self.findRelativeDirection(self.blockFoundOrientation, self.direction_from_start())
+            #print(relative_orientation)
+            if(relative_orientation < 0.05):
+                if(self.checkCollision(self.tempFoundBlocks, self.blockFoundDistance)):
+                    self.state[1] = 1
+                    self.directionBlockJustAvoided = self.direction_from_start()
+                    self.tempFoundBlocks = []
+                else:
+                    self.state[1] += 1
+                    self.tempFoundBlocks = []
+        #initially go forwards towards block
+        if(self.state == [0,4]):
             self.forwards(5)
             if(not(self.block_in_sight()) and self.mid_distance_from_start() < 0.2):
                 self.state = [0,1]
@@ -129,9 +208,12 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
         #reverse back home
         if(self.state == [2,3]):
-            self.backwards(5)
             if(self.mid_distance_from_start() < 0.1):
                 self.state[1] += 1
+            elif(abs(self.direction_from_start() - 3.14) < 0.05):
+                self.backwards(5)
+            else:
+                self.state[1] -= 1
         #spin until blue block is no longer in sight
         if(self.state == [2,4]):
             self.spin(1, 1)
