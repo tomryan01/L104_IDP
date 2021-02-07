@@ -26,6 +26,7 @@ class MyRobot:
         self.numGps = 2
         self.numEmitters = 1
         self.numReceivers = 1
+        self.robotWidth = 100 #mm
 
     #The following methods are used to set up the devices for a robot
     #Each method begins by asserting the length of names in the list
@@ -71,7 +72,7 @@ class MyRobot:
         for i in range(self.numReceivers):
             self.receiver.append(self.robot.getDevice(receiverName[i]))
             self.receiver[i].enable(samplingPeriod)
-            
+
     def reset(self):
         self.wheels[0].setVelocity(0)
         self.wheels[1].setVelocity(0)
