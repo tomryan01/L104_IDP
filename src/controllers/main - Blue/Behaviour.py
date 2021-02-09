@@ -129,9 +129,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
         #reverse back home
         if(self.state == [2,3]):
-            self.backwards(5)
+            #continous course correction
             if(self.mid_distance_from_start() < 0.1):
                 self.state[1] += 1
+            elif(abs(self.direction_away_from_start()) < 0.05):
+                self.backwards(5)
+            else:
+                self.state[1] -= 1
         #spin until blue block is no longer in sight
         if(self.state == [2,4]):
             self.spin(1, -1)
