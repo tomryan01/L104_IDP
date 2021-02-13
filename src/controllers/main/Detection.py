@@ -81,7 +81,11 @@ class Detection(MyRobot):
         critical_wall_dist = min(positive_wall_dists[0], positive_wall_dists[1])
      
         #return true if the distance sensor value is less than the wall distance
-        if self.distanceSensors[0].getValue() < 1000 * critical_wall_dist:
+        if self.get_distance() < 1000 * critical_wall_dist and self.get_distance() < 1390:
+            #found a block
+            if not self.looking_in_list(self.blockLocations):
+                self.blockLocations.append([self.coordinate_looking_at()[0], self.coordinate_looking_at()[1], 0])
+                print(self.blockLocations,"\n")
             return True
         else:
             return False
@@ -140,8 +144,11 @@ class Detection(MyRobot):
         return coordinate_seen
     
 
-    def looking_at_coordinate(self, coordinate):
+    def looking_at_coordinate(self, coordinate_list_item):
         "return true if what you see on the distance sensor is the block at this coordinate"
+
+        #takes only x and y coordinates
+        coordinate = [coordinate_list_item[0],coordinate_list_item[1]]
 
         #get position of front of robot
         front_position_xz = self.front_position()
@@ -181,7 +188,7 @@ class Detection(MyRobot):
         "return true if looking at any coordinate in a list"
         
         #list of true/false
-        true_false_list = [self.looking_at_coordinate(coordinate_list[i]) for i in range(len(coordinate_list))]
+        true_false_list = [self.looking_at_coordinate(v) for v in coordinate_list]
 
         if True in true_false_list:
             return True
