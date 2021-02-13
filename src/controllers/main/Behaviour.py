@@ -3,6 +3,7 @@ from Drive import Drive
 from Gps import Gps
 from Grabber import Grabber
 from Communication import Communication
+import math
 
 class Behaviour(Detection, Drive, Gps, Grabber, Communication):
 
@@ -23,6 +24,20 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.blockLocations = []
 
         
+    def goToCoordinate(self, coordinate):
+        "takes x,y,c coordinate, and drives to that point"
+        coordinate = [coordinate[0] - self.mid_position()[0], coordinate[1] - self.mid_position()[1]]
+        orientation = self.norm_robot_orientation()
+        mag_coordinate = [coordinate[0]/self.get_magnitude(coordinate), coordinate[1]/self.get_magnitude(coordinate)]
+        cross_product = self.cross_product(orientation, mag_coordinate)
+        if(abs(cross_product) < 0.05):
+            if(self.get_magnitude(coordinate) > 0.2):
+                self.forwards(5)
+        elif(cross_product < 0):
+            self.spin(3, -1)
+        else:
+            self.spin(3, 1)
+
     def findBlocks(self):
         "main block finding algorithm"
         #print(self.state)
