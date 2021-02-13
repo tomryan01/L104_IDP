@@ -35,7 +35,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #initial spin at the base
         if(self.state == [0,1]):
             self.spin(1, 1)
-            if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at()))):
+            if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at())) and (self.get_distance() < 1390)):
                 if(not(self.looking_in_list(self.blueLocations)) and not(self.distance_inside_friend_corner())):
                     if(not(looking_at_friend)):
                         self.state[1] += 1

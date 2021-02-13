@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5639638034011502 0.603652056655281 0.5635148826332436 4.228498444806891
-  position -0.33979376660783 4.580975463048025 0.07029085607561103
+  orientation 0.7510516955504996 0.6450422187221084 0.1408612319865873 5.717270082645777
+  position -0.5465378768906256 1.0784162467679839 2.871286529975261
 }
 TexturedBackground {
 }
@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation -0.484765 0.05 0.370226
+  translation 0.329139 0.05 0.379368
   children [
     DEF BOX_R Shape {
       appearance PBRAppearance {
@@ -49,7 +49,7 @@ DEF Block_R1 Solid {
   }
 }
 DEF Block_R2 Solid {
-  translation -0.679437 0.05 0.108394
+  translation 0.622857 0.05 0.301202
   children [
     USE BOX_R
   ]
@@ -69,7 +69,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation -0.41405 0.05 -0.398925
+  translation 0.118204 0.05 0.696262
   children [
     USE BOX_R
   ]
@@ -97,7 +97,7 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation -0.618232 0.05 0.273332
+  translation 0.547649 0.05 0.0511749
   children [
     USE BOX_B
   ]
@@ -117,7 +117,7 @@ DEF Block_B3 Solid {
   }
 }
 DEF Block_B4 Solid {
-  translation -0.403608 0.05 0.406443
+  translation -0.0419848 0.05 0.433313
   children [
     USE BOX_B
   ]
@@ -196,14 +196,245 @@ DEF WALL_4 Solid {
   name "solid(3)"
   boundingObject USE WALL_SHAPE
 }
-Little_Mike {
-  translation 0.95 0.042 0.95
-  colour 1 0.1 0.1
+Robot {
+  translation 0.480801 0.052 1.47113
+  children [
+    GPS {
+      name "gps_mid"
+    }
+    DEF DS_MID DistanceSensor {
+      translation 0 -0.01 0.1
+      rotation 0 1 0 -1.5708003061004252
+      children [
+        DEF DS_box_shape Shape {
+          appearance PBRAppearance {
+            baseColor 0.639 0.757 0.678
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.01 0.01 0.01
+          }
+        }
+      ]
+      name "ds_mid"
+      lookupTable [
+        0 0 0
+        1.4 1400 0
+      ]
+    }
+    DEF Arm1 HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 -1
+        anchor 0.05 0 0.1
+      }
+      device [
+        RotationalMotor {
+          name "arm_1"
+          maxTorque 0.15
+        }
+      ]
+      endPoint DEF Arm_1 Solid {
+        translation 0.0500000000000281 -9.110891234509485e-08 0.12499999981728238
+        rotation 0 0 -1 0
+        children [
+          Solid {
+            translation 0 -0.016 0.01
+            children [
+              DEF arm2 Shape {
+                appearance PBRAppearance {
+                  baseColor 0.639 0.757 0.678
+                  roughness 1
+                  metalness 0
+                }
+                geometry Box {
+                  size 0.01 0.022 0.03
+                }
+              }
+            ]
+            boundingObject USE arm2
+            physics Physics {
+            }
+          }
+          DEF arm1 Shape {
+            appearance PBRAppearance {
+              baseColor 0.639 0.757 0.678
+              roughness 1
+              metalness 0
+            }
+            geometry Box {
+              size 0.01 0.01 0.05
+            }
+          }
+        ]
+        name "solid(6)"
+        boundingObject USE arm1
+        physics Physics {
+        }
+      }
+    }
+    DEF Arm2 HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor -0.05 0 0.1
+      }
+      device [
+        RotationalMotor {
+          name "arm_2"
+          maxTorque 0.15
+        }
+      ]
+      endPoint DEF Arm_1 Solid {
+        translation -0.04999999999999879 -9.110897587066846e-08 0.12499999981728249
+        rotation 0 0 1 0
+        children [
+          USE arm1
+          Solid {
+            translation 0 -0.016 0.01
+            children [
+              USE arm2
+            ]
+            boundingObject USE arm2
+            physics Physics {
+            }
+          }
+        ]
+        name "solid(5)"
+        boundingObject USE arm1
+        physics Physics {
+        }
+      }
+    }
+    Receiver {
+    }
+    Emitter {
+    }
+    GPS {
+      translation 0 0 0.1
+      name "gps_front"
+    }
+    DEF Wheel1 HingeJoint {
+      jointParameters HingeJointParameters {
+        anchor 0.09 0 0
+      }
+      device [
+        RotationalMotor {
+          name "wheel1"
+          maxTorque 0.15
+        }
+      ]
+      endPoint Solid {
+        translation 0.09000000376666334 -3.860335181469741e-06 2.1725002220855488e-07
+        rotation 0.004720662955283152 -0.004720680628829172 -0.9999777150095213 4.712363021520027
+        children [
+          DEF WHEEL_SHAPE Shape {
+            appearance PBRAppearance {
+              baseColor 0.639 0.757 0.678
+              roughness 1
+              metalness 0
+            }
+            geometry Cylinder {
+              height 0.02
+              radius 0.05
+              subdivision 24
+            }
+          }
+        ]
+        name "solid(3)"
+        boundingObject USE WHEEL_SHAPE
+        physics Physics {
+        }
+      }
+    }
+    DEF Wheel2 HingeJoint {
+      jointParameters HingeJointParameters {
+        anchor -0.09 0 0
+      }
+      device [
+        RotationalMotor {
+          name "wheel2"
+          maxTorque 0.15
+        }
+      ]
+      endPoint Solid {
+        translation -0.09000000376665324 3.5547451195393113e-06 -1.5209282810666182e-06
+        rotation 0.004186231954784658 -0.004186247408815348 -0.9999824752437679 4.712367782087172
+        children [
+          USE WHEEL_SHAPE
+        ]
+        name "solid(1)"
+        boundingObject USE WHEEL_SHAPE
+        physics Physics {
+        }
+      }
+    }
+    DEF BALL_FRONT Solid {
+      translation 0 -0.032 0.08
+      children [
+        DEF ROLLER_BALL Shape {
+          geometry Sphere {
+            radius 0.018
+            subdivision 3
+          }
+        }
+      ]
+      name "solid(4)"
+      contactMaterial "slippy"
+      boundingObject USE ROLLER_BALL
+      physics Physics {
+        density -1
+        mass 1
+      }
+    }
+    DEF Camera1 Camera {
+      translation 0 0 0.1
+      rotation 0 1 0 3.14
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 0
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.005 0.005 0.005
+          }
+        }
+      ]
+      name "camera1"
+      recognitionColors [
+        1 0 0
+      ]
+      fieldOfView 0.1
+      width 1
+      height 1
+      near 0.002
+      far 0.1
+    }
+    DEF BODY_SOLID Solid {
+      children [
+        DEF BODY_SHAPE Shape {
+          appearance PBRAppearance {
+            baseColor 1 0.1 0.1
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.16 0.05 0.2
+          }
+        }
+      ]
+    }
+  ]
+  name "My_Robot"
+  boundingObject USE BODY_SHAPE
+  physics Physics {
+    density -1
+    mass 1
+  }
   controller "main"
 }
 Little_Mike {
-  translation 0.95 0.042 -0.95
-  rotation 0 1 0 3.14
-  colour 0.1 0.1 1
-  controller "main - Blue"
+  translation 0.95 0.052 0.95
+  controller "main"
 }
