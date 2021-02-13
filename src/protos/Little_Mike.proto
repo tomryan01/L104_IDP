@@ -1,5 +1,5 @@
 PROTO Little_Mike [
-  field SFVec3f    translation  0 0.042 0
+  field SFVec3f    translation  0 0.052 0
   field SFRotation rotation     0 1 0 0
   field SFColor colour 1 1 1 
   field SFString controller      "void"
