@@ -83,13 +83,15 @@ class Detection(MyRobot):
         #return true if the distance sensor value is less than the wall distance
         if self.get_distance() < 1000 * critical_wall_dist and self.get_distance() < 1390:
             #found a block
-            if not self.looking_in_list(self.blockLocations):
+            if self.looking_in_list(self.blockLocations) == None:
                 self.blockLocations.append([self.coordinate_looking_at()[0], self.coordinate_looking_at()[1], 0])
-                print(self.blockLocations,"\n")
             return True
         else:
+            #remove from blockLocations list if block is no longer there
+            #print(self.looking_in_list(self.blockLocations))
+            #if self.looking_in_list(self.blockLocations) != None:
+            #    self.blockLocations.remove(self.blockLocations[self.looking_in_list(self.blockLocations)])
             return False
-
 
     def red_colour(self):
         "return the level of red recieved by the colour sensor"
@@ -172,7 +174,7 @@ class Detection(MyRobot):
         vector_between = [coordinate[i] - front_position_xz[i] for i in range(2)]
         dist_between = self.get_magnitude(vector_between)
         critical_cos_theta = dist_between / (dist_between**2 + 0.05**2)**0.5
-        
+
         #distance seen by sensor
         distance_seen = self.get_distance() / 1000
         if abs(dot_product) > critical_cos_theta and dot_product > 0:
@@ -182,7 +184,6 @@ class Detection(MyRobot):
                 return True
         else:
             return False
-    
 
     def looking_in_list(self, coordinate_list):
         "return true if looking at any coordinate in a list"
@@ -190,10 +191,12 @@ class Detection(MyRobot):
         #list of true/false
         true_false_list = [self.looking_at_coordinate(v) for v in coordinate_list]
 
-        if True in true_false_list:
-            return True
-        else:
-            return False
+        #return none if all are false, but the index if true
+        for i in range(len(true_false_list)):
+            if true_false_list[i]:
+                print(i)
+                return i
+        return None
     
     
     def distance_inside_friend_corner(self):
