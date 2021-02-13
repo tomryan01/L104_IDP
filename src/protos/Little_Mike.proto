@@ -29,7 +29,7 @@ PROTO Little_Mike [
       name "ds_mid"
       lookupTable [
         0 0 0
-        6 6000 0
+        1.4 1400 0
       ]
     }
     DEF Arm1 HingeJoint {
@@ -40,11 +40,11 @@ PROTO Little_Mike [
       device [
         RotationalMotor {
           name "arm_1"
-          maxTorque 100
+          maxTorque 0.15
         }
       ]
       endPoint DEF Arm_1 Solid {
-        translation 0.05 0 0.125
+        translation 0.0500000000000281 -9.110891234509485e-08 0.12499999981728238
         rotation 0 0 -1 0
         children [
           Solid {
@@ -90,11 +90,11 @@ PROTO Little_Mike [
       device [
         RotationalMotor {
           name "arm_2"
-          maxTorque 100
+          maxTorque 0.15
         }
       ]
       endPoint DEF Arm_1 Solid {
-        translation -0.05 0 0.125
+        translation -0.04999999999999879 -9.110897587066846e-08 0.12499999981728249
         rotation 0 0 1 0
         children [
           USE arm1
@@ -124,17 +124,17 @@ PROTO Little_Mike [
     }
     DEF Wheel1 HingeJoint {
       jointParameters HingeJointParameters {
-        anchor 0.06 0 0
+        anchor 0.09 0 0
       }
       device [
         RotationalMotor {
           name "wheel1"
-          maxTorque 100
+          maxTorque 0.15
         }
       ]
       endPoint Solid {
-        translation 0.06 0 0
-        rotation -0.0019079727809773253 0.0019079797047590358 0.9999963596200304 1.5708036408021362
+        translation 0.09000000376666334 -3.860335181469741e-06 2.1725002220855488e-07
+        rotation 0.004720662955283152 -0.004720680628829172 -0.9999777150095213 4.712363021520027
         children [
           DEF WHEEL_SHAPE Shape {
             appearance PBRAppearance {
@@ -144,7 +144,7 @@ PROTO Little_Mike [
             }
             geometry Cylinder {
               height 0.02
-              radius 0.04
+              radius 0.05
               subdivision 24
             }
           }
@@ -157,17 +157,17 @@ PROTO Little_Mike [
     }
     DEF Wheel2 HingeJoint {
       jointParameters HingeJointParameters {
-        anchor -0.06 0 0
+        anchor -0.09 0 0
       }
       device [
         RotationalMotor {
           name "wheel2"
-          maxTorque 100
+          maxTorque 0.15
         }
       ]
       endPoint Solid {
-        translation -0.06 0 0
-        rotation -0.0019079727809769346 0.0019079797047586843 0.9999963596200305 1.570803640802134
+        translation -0.09000000376665324 3.5547451195393113e-06 -1.5209282810666182e-06
+        rotation 0.004186231954784659 -0.0041862474088153485 -0.999982475243768 4.712367782087172
         children [
           USE WHEEL_SHAPE
         ]
@@ -178,11 +178,11 @@ PROTO Little_Mike [
       }
     }
     DEF BALL_FRONT Solid {
-      translation 0 -0.03 0.08
+      translation 0 -0.032 0.08
       children [
         DEF ROLLER_BALL Shape {
           geometry Sphere {
-            radius 0.01
+            radius 0.018
             subdivision 3
           }
         }
@@ -191,17 +191,8 @@ PROTO Little_Mike [
       contactMaterial "slippy"
       boundingObject USE ROLLER_BALL
       physics Physics {
-      }
-    }
-    DEF BALL_BACK Solid {
-      translation 0 -0.03 -0.08
-      children [
-        USE ROLLER_BALL
-      ]
-      name "solid(2)"
-      contactMaterial "slippy"
-      boundingObject USE ROLLER_BALL
-      physics Physics {
+        density -1
+        mass 1
       }
     }
     DEF Camera1 Camera {
@@ -238,7 +229,7 @@ PROTO Little_Mike [
             metalness 0
           }
           geometry Box {
-            size 0.1 0.05 0.2
+            size 0.16 0.05 0.2
           }
         }
       ]
