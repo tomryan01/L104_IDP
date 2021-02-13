@@ -84,7 +84,13 @@ class Detection(MyRobot):
         if self.get_distance() < 1000 * critical_wall_dist and self.get_distance() < 1390:
             #found a block
             if self.looking_in_list(self.blockLocations) == None:
-                self.blockLocations.append([self.coordinate_looking_at()[0], self.coordinate_looking_at()[1], 0])
+                false_list = []
+                for item in self.blockLocations:
+                    false_list.append(self.same_block_coordinate(item, self.coordinate_looking_at()))
+                if not(True in false_list):
+                    self.blockLocations.append([self.coordinate_looking_at()[0], self.coordinate_looking_at()[1], 0])
+                    self.emit_position([self.coordinate_looking_at()[0], self.coordinate_looking_at()[1], 0])
+                #print(self.blockLocations)
             return True
         else:
             #remove from blockLocations list if block is no longer there
@@ -185,6 +191,24 @@ class Detection(MyRobot):
         else:
             return False
 
+    
+    def same_block_coordinate(self, coordinate_list_item_1, coordinate_list_item_2):
+        "return true if the cordinate_1 passed and corrdinate_2 passed could describe the same block"
+
+        #takes only x and y coordinates
+        coordinate_1 = [coordinate_list_item_1[0],coordinate_list_item_1[1]]
+        coordinate_2 = [coordinate_list_item_2[0],coordinate_list_item_2[1]]
+
+        x_difference = coordinate_1[0] - coordinate_2[0]
+        z_difference = coordinate_1[1] - coordinate_2[1]
+
+        #if differences less than block size then describe same block
+        if abs(x_difference) < 0.05 and abs(z_difference) < 0.05:
+            return True
+        else:
+            return False
+
+
     def looking_in_list(self, coordinate_list):
         "return true if looking at any coordinate in a list"
         
@@ -194,7 +218,7 @@ class Detection(MyRobot):
         #return none if all are false, but the index if true
         for i in range(len(true_false_list)):
             if true_false_list[i]:
-                print(i)
+                #print(i)
                 return i
         return None
     

@@ -25,12 +25,36 @@ class Communication(MyRobot):
             data = struct.unpack("ddB", message)
             return data
         
+    
+
+    def emit_my_position(self):
+        "Emit location of this robot"
+        my_position = self.mid_position()
+        self.emit_position([my_position[0], my_position[1], 3])
+
+
+    def update_block_locations(self):
+        "Update the list of block locations"
+        data = self.receieve_position()
+        #If data is null then no new block to update
+        if data != None:
+            false_list = []
+            for item in self.blockLocations:
+                false_list.append(self.same_block_coordinate(item, data))
+            if not(True in false_list):
+                self.blockLocations.append(data)
+                
         
 
 
     def looking_at_my_friend(self):
         "return true if looking at his friend, consideres angle and distance"
-        friend_position = self.receieve_position()
+        data = self.receieve_position()
+        #if data was null assume not looking at friend
+        if data != None:
+            friend_position = [data[0], data[1]]
+        else:
+            return False
 
         #get position of front of robot
         front_position_xz = self.front_position()

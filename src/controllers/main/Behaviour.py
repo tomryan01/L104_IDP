@@ -28,12 +28,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #print(self.state)
 
         #must call this every time
-        #self.emit_position()
-        #TODO: emit position again
-
-        #if not called then reciver queue fills up with old data
+        self.emit_my_position()
         looking_at_friend = self.looking_at_my_friend()
+        self.update_block_locations()
 
+        
         #initial spin at the base
         if(self.state == [0,1]):
             self.spin(1, 1)
