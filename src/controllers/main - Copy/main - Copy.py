@@ -24,12 +24,19 @@ while testRobot.robot.step(TIME_STEP) != -1:
     #current conditions
     testRobot.reset()
     
-    testRobot.findBlocks()
+    testRobot.emit_my_position()
+    looking_at_friend = testRobot.looking_at_my_friend()
+    testRobot.update_block_locations()
+    testRobot.spin(1,1)
+    testRobot.block_in_sight()
+    #testRobot.findBlocks()
+
+    #testRobot.goToCoordinate([0.4277508075365773, 0.40352656326150915, 0])
 
 
 """
 When copying for second robot, things that need to be changed are:
 Behaviour: block colour red/blue, spin direction x2
-Detection: origin position, friend corner wall definitions
+Detection: origin position, friend corner wall definitions, spin direction correct coordinate
 Gps: my box coordinate definitions
 """

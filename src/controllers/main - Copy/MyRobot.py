@@ -60,7 +60,7 @@ class MyRobot:
         for i in range(self.numGps):
             self.gpsSensors.append(self.robot.getDevice(gpsSensors[i]))
             self.gpsSensors[i].enable(timeStep)
-            
+
     def setEmitter(self, emitterName):
         assert len(emitterName) == self.numEmitters
         for i in range(self.numEmitters):
@@ -71,7 +71,7 @@ class MyRobot:
         for i in range(self.numReceivers):
             self.receiver.append(self.robot.getDevice(receiverName[i]))
             self.receiver[i].enable(samplingPeriod)
-
+            
     def reset(self):
         self.wheels[0].setVelocity(0)
         self.wheels[1].setVelocity(0)

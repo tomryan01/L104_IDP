@@ -3,64 +3,58 @@ import struct
 
 class Communication(MyRobot):
     
-    def emit_position(self):
-        "Emit the position of the robot to his friend"
-        #find robot position
-        mid_position_xz = self.mid_position()
-        position_x = mid_position_xz[0]
-        position_z = mid_position_xz[1]
-        
-        #encode x position onto +5 and x position onto -5
-        coded_x = 5 + position_x
-        coded_z = -5 + position_z
+    def emit_position(self, data):
+        """Emit the positional data, takes argument of data = [x, z, info_bit]
+        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block and 3 for robot"""
 
-        message_x = struct.pack("d", coded_x)
-        message_z = struct.pack("d", coded_z)
-
-        #emit signals
-        self.emitter[0].send(message_x)
-        self.emitter[0].send(message_z)
+        message = struct.pack("ddB", data[0], data[1], data[2])
+        #emit signal
+        self.emitter[0].send(message)
    
         
     def receieve_position(self):
-        "Return the position of the other robot [x,z]"
-        #initialise position variables
-        position_x = 10
-        position_z = 10
+        """Return the position recieved [x,z, info_bit]
+        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block and 3 for robot"""
 
         #ensure there is data in the queue
-        #extract first message, x position
         queue_length = self.receiver[0].getQueueLength()
         if queue_length != 0:
             #get siganl
             message = self.receiver[0].getData()
             self.receiver[0].nextPacket()
-            coded_position = struct.unpack("d", message)
-            #decide if data is x or z
-            if coded_position[0] > 0:
-                position_x = coded_position[0] - 5
-            else:
-                position_z = coded_position[0] + 5
-            
-        #extract second message, z position
-        queue_length = self.receiver[0].getQueueLength()
-        if queue_length != 0:
-            #get siganl
-            message = self.receiver[0].getData()
-            self.receiver[0].nextPacket()
-            coded_position = struct.unpack("d", message)
-            #decide if data is x or z
-            if coded_position[0] > 0:
-                position_x = coded_position[0] - 5
-            else:
-                position_z = coded_position[0] + 5
+            data = struct.unpack("ddB", message)
+            return data
         
-        return [position_x, position_z]
+    
+
+    def emit_my_position(self):
+        "Emit location of this robot"
+        my_position = self.mid_position()
+        self.emit_position([my_position[0], my_position[1], 3])
+
+
+    def update_block_locations(self):
+        "Update the list of block locations"
+        data = self.receieve_position()
+        #If data is null then no new block to update
+        if data != None:
+            false_list = []
+            for item in self.blockLocations:
+                false_list.append(self.same_block_coordinate(item, data))
+            if not(True in false_list):
+                self.blockLocations.append(data)
+                
+        
 
 
     def looking_at_my_friend(self):
         "return true if looking at his friend, consideres angle and distance"
-        friend_position = self.receieve_position()
+        data = self.receieve_position()
+        #if data was null assume not looking at friend
+        if data != None:
+            friend_position = [data[0], data[1]]
+        else:
+            return False
 
         #get position of front of robot
         front_position_xz = self.front_position()

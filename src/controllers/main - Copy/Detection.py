@@ -8,7 +8,7 @@ class Detection(MyRobot):
         super().__init__()
         
         #set origin/start point for robot
-        self.origin = [1, -1]
+        self.origin = [1, 1]
 
     def find_wall_distance(self, robot_position, robot_orientation, wall_position, wall_direction):
         """find the intersection of two 2D vector lines
@@ -81,11 +81,23 @@ class Detection(MyRobot):
         critical_wall_dist = min(positive_wall_dists[0], positive_wall_dists[1])
      
         #return true if the distance sensor value is less than the wall distance
-        if self.distanceSensors[0].getValue() < 1000 * critical_wall_dist:
+        if self.get_distance() < 1000 * critical_wall_dist and self.get_distance() < 1390:
+            #found a block
+            if self.looking_in_list(self.blockLocations) == None:
+                false_list = []
+                for item in self.blockLocations:
+                    false_list.append(self.same_block_coordinate(item, self.coordinate_looking_at()))
+                if not(True in false_list):
+                    coordinate = self.correct_coordinate(self.coordinate_looking_at())
+                    self.blockLocations.append([coordinate[0], coordinate[1], 0])
+                    self.emit_position(self.blockLocations[-1])
             return True
         else:
+            #remove from blockLocations list if block is no longer there
+            #print(self.looking_in_list(self.blockLocations))
+            #if self.looking_in_list(self.blockLocations) != None:
+            #    self.blockLocations.remove(self.blockLocations[self.looking_in_list(self.blockLocations)])
             return False
-
 
     def red_colour(self):
         "return the level of red recieved by the colour sensor"
@@ -140,8 +152,11 @@ class Detection(MyRobot):
         return coordinate_seen
     
 
-    def looking_at_coordinate(self, coordinate):
+    def looking_at_coordinate(self, coordinate_list_item):
         "return true if what you see on the distance sensor is the block at this coordinate"
+
+        #takes only x and y coordinates
+        coordinate = [coordinate_list_item[0],coordinate_list_item[1]]
 
         #get position of front of robot
         front_position_xz = self.front_position()
@@ -165,7 +180,7 @@ class Detection(MyRobot):
         vector_between = [coordinate[i] - front_position_xz[i] for i in range(2)]
         dist_between = self.get_magnitude(vector_between)
         critical_cos_theta = dist_between / (dist_between**2 + 0.05**2)**0.5
-        
+
         #distance seen by sensor
         distance_seen = self.get_distance() / 1000
         if abs(dot_product) > critical_cos_theta and dot_product > 0:
@@ -175,28 +190,47 @@ class Detection(MyRobot):
                 return True
         else:
             return False
+
     
+    def same_block_coordinate(self, coordinate_list_item_1, coordinate_list_item_2):
+        "return true if the cordinate_1 passed and corrdinate_2 passed could describe the same block"
+
+        #takes only x and y coordinates
+        coordinate_1 = [coordinate_list_item_1[0],coordinate_list_item_1[1]]
+        coordinate_2 = [coordinate_list_item_2[0],coordinate_list_item_2[1]]
+
+        x_difference = coordinate_1[0] - coordinate_2[0]
+        z_difference = coordinate_1[1] - coordinate_2[1]
+
+        #if differences less than block size then describe same block
+        if abs(x_difference) < 0.05 and abs(z_difference) < 0.05:
+            return True
+        else:
+            return False
+
 
     def looking_in_list(self, coordinate_list):
         "return true if looking at any coordinate in a list"
         
         #list of true/false
-        true_false_list = [self.looking_at_coordinate(coordinate_list[i]) for i in range(len(coordinate_list))]
+        true_false_list = [self.looking_at_coordinate(v) for v in coordinate_list]
 
-        if True in true_false_list:
-            return True
-        else:
-            return False
+        #return none if all are false, but the index if true
+        for i in range(len(true_false_list)):
+            if true_false_list[i]:
+                #print(i)
+                return i
+        return None
     
     
     def distance_inside_friend_corner(self):
         "return True if distance measured is inside the friend robot region"
 
         #Define the 2 boundaries
-        wall_1_position = [0.8, 0.8]
+        wall_1_position = [0.8, -0.8]
         wall_1_direction = [1, 0]
-        wall_2_position = [0.8, 0.8]
-        wall_2_direction = [0, 1]
+        wall_2_position = [0.8, -0.8]
+        wall_2_direction = [0, -1]
 
         #Find position of the robot, will use front position for finding distance
         front_position_xz = self.front_position()
@@ -240,3 +274,18 @@ class Detection(MyRobot):
             return True
         else:
             return False
+
+    def correct_coordinate(self, coordinate_item):
+        "correct the inital block seen to middle"
+        coordinate = [coordinate_item[0], coordinate_item[1]]
+
+        my_position = self.mid_position()
+        vector_to_point = [coordinate[i] - my_position[i] for i in range(2)]
+
+        norm_vector = [vector_to_point[i] / self.get_magnitude(vector_to_point) for i in range(2)]
+
+        perp_vector = [ -1*norm_vector[1], norm_vector[0]]
+
+        corrected_coordinate = [coordinate[i] + 0.03 * perp_vector[i] for i in range(2)]
+
+        return [corrected_coordinate[0], corrected_coordinate[1]]

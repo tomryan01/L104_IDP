@@ -88,9 +88,9 @@ class Detection(MyRobot):
                 for item in self.blockLocations:
                     false_list.append(self.same_block_coordinate(item, self.coordinate_looking_at()))
                 if not(True in false_list):
-                    self.blockLocations.append([self.coordinate_looking_at()[0], self.coordinate_looking_at()[1], 0])
-                    self.emit_position([self.coordinate_looking_at()[0], self.coordinate_looking_at()[1], 0])
-                #print(self.blockLocations)
+                    coordinate = self.correct_coordinate(self.coordinate_looking_at())
+                    self.blockLocations.append([coordinate[0], coordinate[1], 0])
+                    self.emit_position(self.blockLocations[-1])
             return True
         else:
             #remove from blockLocations list if block is no longer there
@@ -274,3 +274,18 @@ class Detection(MyRobot):
             return True
         else:
             return False
+
+    def correct_coordinate(self, coordinate_item):
+        "correct the inital block seen to middle"
+        coordinate = [coordinate_item[0], coordinate_item[1]]
+
+        my_position = self.mid_position()
+        vector_to_point = [coordinate[i] - my_position[i] for i in range(2)]
+
+        norm_vector = [vector_to_point[i] / self.get_magnitude(vector_to_point) for i in range(2)]
+
+        perp_vector = [ -1*norm_vector[1], norm_vector[0]]
+
+        corrected_coordinate = [coordinate[i] + 0.03 * perp_vector[i] for i in range(2)]
+
+        return [corrected_coordinate[0], corrected_coordinate[1]]
