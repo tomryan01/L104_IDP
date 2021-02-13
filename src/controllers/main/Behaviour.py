@@ -23,7 +23,6 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #store location of blocks
         self.blockLocations = []
 
-        
     def goToCoordinate(self, coordinate):
         "takes x,y,c coordinate, and drives to that point"
         coordinate = [coordinate[0] - self.mid_position()[0], coordinate[1] - self.mid_position()[1]]
@@ -37,6 +36,24 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             self.spin(3, -1)
         else:
             self.spin(3, 1)
+
+    def checkCollision(self, coordinate):
+        "Takes x,y coordinate: Checks to see if a coordinate to be travelled to will result in the robot colliding with a different block"
+        #TODO: Check for another robot collision too
+        mag_coord = self.get_magnitude(coordinate)
+        norm_coord = [coordinate[0]/mag_coord, coordinate[1]/mag_coord]
+        for b in self.blockLocations:
+            mag_b = self.get_magnitude(b)
+            if(mag_b < mag_coord):
+                b = [b[0], b[1]]
+                norm_b = [b[0]/mag_b, b[1]/mag_b]
+                angle = math.acos(self.dot_product(norm_coord, norm_b))
+                d = mag_b * math.sin(angle)
+                if d < self.ROBOT_WIDTH / 2000:
+                    #they will collide
+                    return True
+        #they won't collide
+        return False
 
     def findBlocks(self):
         "main block finding algorithm"
