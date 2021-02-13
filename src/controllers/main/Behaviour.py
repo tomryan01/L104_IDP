@@ -19,8 +19,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #use to count to 4 blocks
         self.blocksDelivered = 0
 
-        #store location of blue blocks
-        self.blueLocations = []
+        #store location of blocks
+        self.blockLocations = []
 
         
     def findBlocks(self):
@@ -28,7 +28,9 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #print(self.state)
 
         #must call this every time
-        self.emit_position()
+        #self.emit_position()
+        #TODO: emit position again
+        
         #if not called then reciver queue fills up with old data
         looking_at_friend = self.looking_at_my_friend()
 
@@ -36,7 +38,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if(self.state == [0,1]):
             self.spin(1, 1)
             if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at())) and (self.get_distance() < 1390)):
-                if(not(self.looking_in_list(self.blueLocations)) and not(self.distance_inside_friend_corner())):
+                if(not(self.looking_in_list(self.blockLocations)) and not(self.distance_inside_friend_corner())):
                     if(not(looking_at_friend)):
                         self.state[1] += 1
         #initially go forwards towards block
@@ -52,7 +54,6 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 else:
                     self.state = [2,1]
                     self.blockOriginalDistance = self.distance_from_start()
-                    self.blueLocations.append(self.coordinate_looking_at())
             if(looking_at_friend):
                 self.state = self.state = [2,2]
         #keep going forwards, because found block is red
