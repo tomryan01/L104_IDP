@@ -289,7 +289,7 @@ class Detection(MyRobot):
 
         norm_vector = [vector_to_point[i] / self.get_magnitude(vector_to_point) for i in range(2)]
 
-        perp_vector = [ norm_vector[1], -1*norm_vector[0]]
+        perp_vector = [self.spinDirection*-1*norm_vector[1], self.spinDirection*norm_vector[0]]
 
         corrected_coordinate = [coordinate[i] + 0.01 * perp_vector[i] for i in range(2)]
 

@@ -8,7 +8,7 @@ import math
 class Behaviour(Detection, Drive, Gps, Grabber, Communication):
 
     def __init__(self):
-        #calls constructor for parent class
+         #calls constructor for parent class
         super().__init__()
 
         #use to store distance from start of a found block
@@ -26,15 +26,15 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #the current block to look for
         self.blockToFind = 0
 
-        #*static* variables for checkForBlock functionn
-        self.firstDirection = None
-        self.spinDirection = 1
-
         #counter
         self.count = 0
 
         #position of other robot
         self.friend_location = None
+
+        #*static* variables for checkForBlock functionn
+        self.firstDirection = None
+        self.spinDirection = -1
 
     def goToCoordinate(self, coordinate, check_collision):
         #TODO: Implement better method than using a check_collision bool
@@ -52,6 +52,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     else:
                         print("Blue robot cannot collect block or it would collide")
                         return "Collision"
+                #else:
+                #    return "Robot"
             elif(cross_product < 0):
                 if(abs(cross_product) < 0.05):
                     self.spin(1, -1)
@@ -138,6 +140,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.update_block_locations()
         #print(self.state)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
+        
         #initial spin to get block positions
         if self.state == [0,1]:
             if(abs(self.direction_from_start()) < 0.05):
@@ -145,7 +148,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
             else:
                 #on initial spin look for block positions but don't collect them
-                self.spin(1,-1)
+                self.spin(1,self.spinDirection)
                 self.block_in_sight()
         #go to block
         if self.state == [0,2]:
@@ -154,7 +157,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 if(self.blockLocations[self.blockToFind][2] == 0 or self.blockLocations[self.blockToFind][2] == 2):
                     result = self.goToCoordinate(self.blockLocations[self.blockToFind], True)
                 else:
-                    result = "Blue"
+                    result = "Red"
             except IndexError:
                 #there is an exception if blockToFind exceeds the length of blockLocations
                 print("Blue has found no blocks!")
@@ -180,8 +183,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                         self.blockToFind += 1
                     else:
                         self.blockToFind = result
-                elif(result == "Blue"):
-                    #the block to find is blue
+                elif(result == "Red"):
+                    #the block to find is red
                     result = self.setBlockToFind()
                     if result == self.blockToFind:
                         #cannot be the same, as that is the block that caused the collision
@@ -279,11 +282,14 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 #block was found, go get it
                 self.state = [0,2]
         #block is blue
-        #first reverse 10%
+        #first reverse a little
         if self.state == [2,1]:
             self.backwards(5)
-            if(self.distance_from_start() < 0.9*self.blockOriginalDistance):
+            if(self.count > 10):
                 self.state[1] += 1
+                self.count = 0
+            else:
+                self.count += 1
         #go back to start
         if self.state == [2,2]:
             result = self.goToCoordinate([0.95, -0.95], False)
@@ -291,8 +297,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state = [0,2]
         #reverse a little on a potential robot collision (when hasn't got block)
         if self.state == [3,1]:
-            self.backwards(5)
-            if(self.count > 8):
+            self.backwards(8)
+            if(self.count > 4):
                 self.state = [0,2]
                 self.count = 0
             else:

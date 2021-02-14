@@ -50,7 +50,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     if(not self.checkCollision(coordinate) or not check_collision):
                         self.forwards(5)
                     else:
-                        print("Blue robot cannot collect block or it would collide")
+                        print("Red robot cannot collect block or it would collide")
                         return "Collision"
                 else:
                     return "Robot"
@@ -139,7 +139,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
-        print(self.state)
+        #print(self.state)
         #print(len(self.blockLocations))
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
@@ -150,7 +150,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
             else:
                 #on initial spin look for block positions but don't collect them
-                self.spin(1,1)
+                self.spin(1,self.spinDirection)
                 self.block_in_sight()
         #go to block
         if self.state == [0,2]:
