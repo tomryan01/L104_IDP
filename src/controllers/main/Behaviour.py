@@ -87,7 +87,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         return False
 
     def spinLeftRight(self, max_angle):
-        "spins left and right defined by a maximum angle"
+        "spins left and right defined by a maximum angle, initial direction is -1 for left and +1 for right"
         #initial setup of 'static' variable
         if(self.firstDirection == None):
             self.firstDirection = self.norm_robot_orientation()
@@ -139,7 +139,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
-        #print(self.state)
+        print(self.state)
         #print(len(self.blockLocations))
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
@@ -229,11 +229,15 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #reverse 10% of distance
         if self.state == [0,5]:
             self.backwards(5)
-            if(self.distance_from_start() < 0.9*self.blockOriginalDistance):
+            if(self.count > 10):
+                self.count = 0
                 if(self.get_distance() < 40):
                     self.state[1] += 1
                 else:
                     self.state = [1,1]
+            else:
+                self.count += 1
+
         #go back to start
         if self.state == [0,6]:
             """
@@ -311,11 +315,26 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             else:
                 self.count += 1
         #initiate phase 2
+        #go to start position
         if self.state == [5,1]:
             #TODO: Collision handling for this
             result = self.goToCoordinate([0, 0.56], False)
             if(result == "Done"):
-                self.state = [0,1]
+                self.state[1] += 1
+        #do initial sweep
+        if self.state == [5,2]:
+            self.spinDirection = -1
+            angle = self.spinLeftRight(3.14)
+            self.block_in_sight()
+            if(abs(angle) > 3):
+                self.state[1] += 1
+        if self.state == [5,3]:
+            self.spinDirection = 1
+            angle = self.spinLeftRight(3.14)
+            self.block_in_sight()
+            if(abs(angle) > 3):
+                self.state = [0,2]
+
 
     def findBlocks(self):
         "main block finding algorithm"
