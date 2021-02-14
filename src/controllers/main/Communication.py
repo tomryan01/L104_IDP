@@ -40,13 +40,13 @@ class Communication(MyRobot):
         if data != None:
             #If the message is about removing item
             if data[2] == 4:
-                for i in range(len(self.blockLocations)):
-                    same_block = self.same_block_coordinate(self.blockLocations[i], data)
+                for b in self.blockLocations:
+                    same_block = self.same_block_coordinate(b, data)
                     if same_block:
-                        self.blockLocations.remove(self.blockLocations[i])
                         #remove one from blockToFind since the list is shorter
-                        if self.blockToFind >= i:
+                        if self.blockToFind >= self.blockLocations.index(b):
                             self.blockToFind -= 1
+                        self.blockLocations.remove(b)
                         return "Deleted"
             #if message is about adding item
             else:

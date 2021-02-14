@@ -28,7 +28,7 @@ class MyRobot:
         self.numReceivers = 1
 
         #constants for robot
-        self.ROBOT_WIDTH = 220 #mm
+        self.ROBOT_WIDTH = 250 #mm
 
     #The following methods are used to set up the devices for a robot
     #Each method begins by asserting the length of names in the list

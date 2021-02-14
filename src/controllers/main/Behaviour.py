@@ -109,6 +109,15 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(self.spinDirection == 1 and angle < 0):
                 return "Done"
 
+    def setBlockToFind(self):
+        "Sets blockToFind to the nearest block"
+        magnitudes = []
+        for b in self.blockLocations:
+            if(b[2] == 0 or b[2] == 1):
+                b = [b[0] - self.mid_position()[0], b[1] - self.mid_position()[1]]
+                magnitudes.append(self.get_magnitude(b))
+        return magnitudes.index(min(magnitudes))
+
     def findBlocks2(self):
         "Test block finding algorithm"
         #must call this every time
@@ -116,6 +125,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         looking_at_friend = self.looking_at_my_friend()
         self.update_block_locations()
         #print(self.state)
+        print(len(self.blockLocations))
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
         #initial spin to get block positions
@@ -152,10 +162,20 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     self.state[1] += 1
                 elif(result == "Collision"):
                     #the robot should not collect the block
-                    self.blockToFind += 1
+                    result = self.setBlockToFind()
+                    if result == self.blockToFind:
+                        #cannot be the same, as that is the block that caused the collision
+                        self.blockToFind += 1
+                    else:
+                        self.blockToFind = result
                 elif(result == "Blue"):
                     #the block to find is blue
-                    self.blockToFind += 1
+                    result = self.setBlockToFind()
+                    if result == self.blockToFind:
+                        #cannot be the same, as that is the block that caused the collision
+                        self.blockToFind += 1
+                    else:
+                        self.blockToFind = result
         #check block colour
         if self.state == [0,3]:
             if(self.red_colour() > self.blue_colour() + 20):
