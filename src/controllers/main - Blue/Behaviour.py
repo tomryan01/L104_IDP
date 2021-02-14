@@ -181,12 +181,19 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.forwards(2)
                 if(self.block_in_distance()):
                     self.state[1] += 1
-            else:
+            elif(self.red_colour() > self.blue_colour() + 20):
                 #block is red
                 self.state = [2,1]
                 #update colour of found block
                 self.blockLocations[self.blockToFind][2] = 1
                 self.blockOriginalDistance = self.distance_from_start()
+            else:
+                #block has gone
+                emit = [self.blockLocations[self.blockToFind][0], self.blockLocations[self.blockToFind][1], 4]
+                self.emit_position(emit)
+                self.blockLocations.remove(self.blockLocations[self.blockToFind])
+                self.blockToFind -= 1
+                self.state[1] = 6
         #pick up red block
         if self.state == [0,4]:
             self.pick_up()

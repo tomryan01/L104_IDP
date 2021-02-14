@@ -26,6 +26,9 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #the current block to look for
         self.blockToFind = 0
 
+        #counter
+        self.count = 0
+
         #*static* variables for checkForBlock functionn
         self.firstDirection = None
         self.spinDirection = 1
@@ -180,15 +183,25 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [0,3]:
             if(self.red_colour() > self.blue_colour() + 20):
                 #block is red
+                print("a")
                 self.forwards(2)
                 if(self.block_in_distance()):
                     self.state[1] += 1
-            else:
+            elif(self.blue_colour() > self.red_colour() + 20):
                 #block is blue
+                print("b")
                 self.state = [2,1]
                 #update colour of found block
                 self.blockLocations[self.blockToFind][2] = 2
                 self.blockOriginalDistance = self.distance_from_start()
+            else:
+                #block has gone
+                print("c")
+                emit = [self.blockLocations[self.blockToFind][0], self.blockLocations[self.blockToFind][1], 4]
+                self.emit_position(emit)
+                self.blockLocations.remove(self.blockLocations[self.blockToFind])
+                self.blockToFind -= 1
+                self.state[1] = 6
         #pick up red block
         if self.state == [0,4]:
             self.pick_up()
@@ -252,11 +265,14 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 #block was found, go get it
                 self.state = [0,2]
         #block is blue
-        #first reverse 10%
+        #first reverse a little
         if self.state == [2,1]:
             self.backwards(5)
-            if(self.distance_from_start() < 0.9*self.blockOriginalDistance):
+            if(self.count > 10):
                 self.state[1] += 1
+                self.count = 0
+            else:
+                self.count += 1
         #go back to start
         if self.state == [2,2]:
             result = self.goToCoordinate([0.95, 0.95], False)
