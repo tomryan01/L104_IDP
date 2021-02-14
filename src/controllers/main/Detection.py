@@ -203,7 +203,7 @@ class Detection(MyRobot):
         z_difference = coordinate_1[1] - coordinate_2[1]
 
         #if differences less than block size then describe same block
-        if abs(x_difference) < 0.05 and abs(z_difference) < 0.05:
+        if abs(x_difference) < 0.055 and abs(z_difference) < 0.055:
             return True
         else:
             return False

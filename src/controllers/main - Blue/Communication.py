@@ -38,11 +38,23 @@ class Communication(MyRobot):
         data = self.receieve_position()
         #If data is null then no new block to update
         if data != None:
-            false_list = []
-            for item in self.blockLocations:
-                false_list.append(self.same_block_coordinate(item, data))
-            if not(True in false_list):
-                self.blockLocations.append(data)
+            #If the message is about removing item
+            if data[2] == 4:
+                for i in range(len(self.blockLocations)):
+                    same_block = self.same_block_coordinate(self.blockLocations[i], data)
+                    if same_block:
+                        self.blockLocations.remove(self.blockLocations[i])
+                        #remove one from blockToFind since the list is shorter
+                        if self.blockToFind >= i:
+                            self.blockToFind -= 1
+                        return "Deleted"
+            #if message is about adding item
+            else:
+                false_list = []
+                for item in self.blockLocations:
+                    false_list.append(self.same_block_coordinate(item, data))
+                if not(True in false_list):
+                    self.blockLocations.append(data)
                 
         
 

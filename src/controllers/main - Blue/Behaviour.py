@@ -115,7 +115,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         looking_at_friend = self.looking_at_my_friend()
         self.update_block_locations()
-        print(self.state)
+        #print(self.state)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
         #initial spin to get block positions
@@ -145,7 +145,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 the remaining items in the list, never going to collect any of them because they are either declared
                 blue or result in a collision
                 """
-                self.state[0] = 4
+                #self.state[0] = 4
             else:
                 if(result == "Done"):
                     #once reached block move on
@@ -175,6 +175,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             #if arms are up i.e block is picked up
             if(self.armsPosition == 1):
                 #remove found block from blockLocations
+                emit = [self.blockLocations[self.blockToFind][0], self.blockLocations[self.blockToFind][1], 4]
+                self.emit_position(emit)
                 self.blockLocations.remove(self.blockLocations[self.blockToFind])
                 #remove one from blockToFind since the list is shorter
                 self.blockToFind -= 1
