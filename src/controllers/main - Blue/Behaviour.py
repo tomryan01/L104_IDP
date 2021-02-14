@@ -141,6 +141,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.friend_location = self.friend_position()
         self.update_block_locations()
         #print(self.state)
+        print(self.blockLocations)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
         
         #initial spin to get block positions
@@ -182,7 +183,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     #the robot should not collect the block
                     self.blockToFind += 1
                     #if friend is also stuck, both move to phase 2
-                    self.emit_position([0,0,5])
+                    isStuck = True
+                    for b in self.blockLocations:
+                        coord = [b[0] - self.mid_position()[0], b[1] - self.mid_position()[1]]
+                        if(b[2] == 0 or b[2] == 2) and not self.checkCollision(coord):
+                            isStuck = False
+                    if(isStuck):
+                        self.emit_position([0,0,5])
                     if self.friendStuck:
                         self.state = [5,1]
                         self.friendStuck = False
@@ -323,6 +330,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             result = self.goToCoordinate([0, -0.56], False)
             if(result == "Done"):
                 self.state[1] += 1
+                self.block_in_sight(self.friend_location)
         #do initial sweep
         if self.state == [5,2]:
             self.spinDirection = 1
@@ -337,7 +345,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(angle < -3):
                 allRed = True
                 for b in self.blockLocations:
-                    if(b[2] == 0 or b[1] == 2):
+                    if(b[2] == 0 or b[2] == 2):
                         allRed = False
                 if(len(self.blockLocations) == 0) or allRed: 
                     self.state = [6,1]
