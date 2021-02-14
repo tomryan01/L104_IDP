@@ -52,8 +52,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     else:
                         print("Blue robot cannot collect block or it would collide")
                         return "Collision"
-                else:
-                    return "Robot"
+                #else:
+                #    return "Robot"
             elif(cross_product < 0):
                 if(abs(cross_product) < 0.05):
                     self.spin(1, -1)
@@ -165,7 +165,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 #TODO: Search for more blocks if there are no blocks to be found
                 self.blockToFind = 0
                 """
-                IMPORTANT: This ommits cases where some blocks were unable to be collected due
+                IMPORTANT TODO: This ommits cases where some blocks were unable to be collected due
                 to them being obstructed
                 """
                 if(len(self.blockLocations) == 0):
@@ -185,7 +185,6 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     else:
                         self.blockToFind = result
                 elif(result == "Red"):
-                    print('d')
                     #the block to find is red
                     result = self.setBlockToFind()
                     if result == self.blockToFind:
@@ -352,7 +351,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             else:
                 self.count += 1
         if self.state == [6,2]:
-            result = self.goToCoordinate([1, -1], False)
+            result = self.goToCoordinate([1.05, -1.05], False)
             if(result == "Done"):
                 self.state[1] += 1
         if self.state == [6,3]:

@@ -139,7 +139,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
-        print(self.state)
+        #print(self.state)
         #print(len(self.blockLocations))
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
@@ -167,7 +167,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 #TODO: Search for more blocks if there are no blocks to be found
                 self.blockToFind = 0
                 """
-                IMPORTANT: This ommits cases where some blocks were unable to be collected due
+                IMPORTANT TODO: This ommits cases where some blocks were unable to be collected due
                 to them being obstructed
                 """
                 if(len(self.blockLocations) == 0):
@@ -187,14 +187,21 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     else:
                         self.blockToFind = result
                 elif(result == "Blue"):
-                    #the block to find is blue
+                    #the block to find is red
                     result = self.setBlockToFind()
                     if result == self.blockToFind:
-                        #cannot be the same, as that is the block that caused the collision
-                        if (self.blockToFind + 1) > len(self.blockLocations):
+                        #check to see if all remaining blocks are blue
+                        allBlue = True
+                        for b in self.blockLocations:
+                            if(b[2] == 0 or b[1] == 2):
+                                allBlue = False
+                        if(allBlue):
                             self.state = [5,1]
                         else:
-                            self.blockToFind += 1
+                            self.blockToFind += 1 
+                        """
+                        PROBLEM TODO: if all blue stay at spin point and obstruct blue from access block
+                        """
                     else:
                         self.blockToFind = result
         #check block colour
@@ -349,7 +356,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             else:
                 self.count += 1
         if self.state == [6,2]:
-            result = self.goToCoordinate([1, 1], False)
+            result = self.goToCoordinate([1.05, 1.05], False)
             if(result == "Done"):
                 self.state[1] += 1
         if self.state == [6,3]:
