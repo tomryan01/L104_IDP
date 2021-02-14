@@ -34,7 +34,7 @@ class Detection(MyRobot):
         return [lambda_solutions[0][0], lambda_solutions[1][0]]
         
 
-    def block_in_sight(self):
+    def block_in_sight(self, friend_position):
         "Return true if distance sensor less than wall distance, block is closer than the wall"
         #Must consider distance to all 4 walls
         #only accept walls infront of robot (positive distance) and choose minmum of the positive two
@@ -81,7 +81,7 @@ class Detection(MyRobot):
         critical_wall_dist = min(positive_wall_dists[0], positive_wall_dists[1])
 
         #Check block isnt in your corner or friend corner
-        if not(self.coordinate_in_my_box(self.coordinate_looking_at())) and not(self.distance_inside_friend_corner()):
+        if not(self.coordinate_in_my_box(self.coordinate_looking_at())) and not(self.distance_inside_friend_corner()) and not(self.looking_at_friend(friend_position)):
 
             #return true if the distance sensor value is less than the wall distance
             if self.get_distance() < 1000 * critical_wall_dist and self.get_distance() < 1390:
@@ -294,3 +294,39 @@ class Detection(MyRobot):
         corrected_coordinate = [coordinate[i] + 0.01 * perp_vector[i] for i in range(2)]
 
         return [corrected_coordinate[0], corrected_coordinate[1]]
+
+
+    def looking_at_friend(self, friend_position):
+        "return true if looking at his friend, consideres angle and distance"
+       
+        #get position of front of robot
+        front_position_xz = self.front_position()
+        #get position of middle of robot
+        mid_position_xz = self.mid_position()
+
+        #find notmal orientation of robot in [x,z]
+        norm_robot_orientation = self.norm_robot_orientation()
+
+        #fiend direction of friend
+        friend_direction = []
+        for i in range(2):
+            friend_direction.append(friend_position[i] - mid_position_xz[i])
+        #normalise
+        norm_friend_direction = [friend_direction[i] / self.get_magnitude(friend_direction) for i in range(2)]
+        
+        #find out if they are parallel
+        dot_product = self.dot_product(norm_robot_orientation, norm_friend_direction)
+
+        #dot product is cos(angle between them) and we can calc the critical angle between them from the extreme case:
+        vector_between = [friend_position[i] - front_position_xz[i] for i in range(2)]
+        dist_between = self.get_magnitude(vector_between)
+        critical_cos_theta = dist_between / (dist_between**2 + (self.ROBOT_WIDTH/2000)**2)**0.5
+        
+        #return true if looking at friend
+        if abs(dot_product) > critical_cos_theta and dot_product > 0:
+            if self.get_distance() / 1000 > dist_between - 0.2:
+                return True
+            else:
+                return False
+        else:
+            return False

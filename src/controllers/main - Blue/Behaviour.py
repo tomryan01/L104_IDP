@@ -109,7 +109,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         same block that was fumbled, but for small fumbles this works
         okay - but worth thinking about if problem cases come up
         """
-        if(self.block_in_sight()):
+        if(self.block_in_sight(self.friend_location)):
             #make the found block the next block to collect
             self.blockToFind = len(self.blockLocations) -1
             return "Found"
@@ -149,7 +149,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             else:
                 #on initial spin look for block positions but don't collect them
                 self.spin(1,self.spinDirection)
-                self.block_in_sight()
+                self.block_in_sight(self.friend_location)
         #go to block
         if self.state == [0,2]:
             try:
@@ -322,13 +322,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [5,2]:
             self.spinDirection = 1
             angle = self.spinLeftRight(3.14)
-            self.block_in_sight()
+            self.block_in_sight(self.friend_location)
             if(angle > 3):
                 self.state[1] += 1
         if self.state == [5,3]:
             self.spinDirection = -1
             angle = self.spinLeftRight(3.14)
-            self.block_in_sight()
+            self.block_in_sight(self.friend_location)
             if(angle < -3):
                 self.state = [0,2]
 
@@ -344,16 +344,16 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #initial spin at the base
         if(self.state == [0,1]):
             self.spin(1, 1)
-            if(self.block_in_sight() and not(self.coordinate_in_my_box(self.coordinate_looking_at())) and (self.get_distance() < 1390)):
+            if(self.block_in_sight(self.friend_location) and not(self.coordinate_in_my_box(self.coordinate_looking_at())) and (self.get_distance() < 1390)):
                 if(self.looking_in_list(self.blockLocations) == None and not(self.distance_inside_friend_corner())):
                     if(not(looking_at_friend)):
                         self.state[1] += 1
         #initially go forwards towards block
         if(self.state == [0,2]):
             self.forwards(5)
-            if(not(self.block_in_sight()) and self.mid_distance_from_start() < 0.2):
+            if(not(self.block_in_sight(self.friend_location)) and self.mid_distance_from_start() < 0.2):
                 self.state = [0,1]
-            if(not(self.block_in_sight()) and self.back_distance_from_start() > 0.5):
+            if(not(self.block_in_sight(self.friend_location)) and self.back_distance_from_start() > 0.5):
                 self.state = [2, 2]
             if(self.block_in_colour_sensor_range()):
                 if(self.red_colour() > self.blue_colour() + 20):
@@ -366,7 +366,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #keep going forwards, because found block is red
         if(self.state == [1,1]):
             self.forwards(5)
-            if(not(self.block_in_sight())):
+            if(not(self.block_in_sight(self.friend_location))):
                 self.state = [1,10]
             if(self.block_in_distance()):
                 self.state[1] += 1
@@ -447,7 +447,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #spin until blue block is no longer in sight
         if(self.state == [2,4]):
             self.spin(1, 1)
-            if(not(self.block_in_sight())):
+            if(not(self.block_in_sight(self.friend_location))):
                 self.state = [0,1]
         #reverse back if collected all blocks
         if(self.state == [3,1]):

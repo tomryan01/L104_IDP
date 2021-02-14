@@ -27,6 +27,7 @@ while testRobot.robot.step(TIME_STEP) != -1:
     testRobot.findBlocks2()
 
 
+
 """
 When copying for second robot, things that need to be changed are:
 Behaviour: 
