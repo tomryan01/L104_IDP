@@ -180,12 +180,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     self.state = [3,1]
                 elif(result == "Collision"):
                     #the robot should not collect the block
-                    result = self.setBlockToFind()
-                    if result == self.blockToFind:
-                        #cannot be the same, as that is the block that caused the collision
-                        self.blockToFind += 1
-                    else:
-                        self.blockToFind = result
+                    self.blockToFind += 1
                     #if friend is also stuck, both move to phase 2
                     self.emit_position([0,0,5])
                     if self.friendStuck:
@@ -193,19 +188,15 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                         self.friendStuck = False
                 elif(result == "Red"):
                     #the block to find is red
-                    result = self.setBlockToFind()
-                    if result == self.blockToFind:
-                        #check to see if all remaining blocks are red
-                        allRed = True
-                        for b in self.blockLocations:
-                            if(b[2] == 0 or b[1] == 2):
-                                allRed = False
-                        if(allRed):
-                            self.state = [5,1]
-                        else:
-                            self.blockToFind += 1 
+                    #check to see if all remaining blocks are red
+                    allRed = True
+                    for b in self.blockLocations:
+                        if(b[2] == 0 or b[1] == 2):
+                            allRed = False
+                    if(allRed):
+                        self.state = [5,1]
                     else:
-                        self.blockToFind = result
+                        self.blockToFind += 1 
         #check block colour
         if self.state == [0,3]:
             if(self.blue_colour() > self.red_colour() + 20):
