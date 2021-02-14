@@ -258,8 +258,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
                 self.blocksDelivered += 1
                 if self.blocksDelivered >= 4:
-                    #TODO: End program when all blocks delivered
-                    pass
+                    self.state = [6,1]
         #reverse a little bit so don't hit block on spin
         if self.state == [0,8]:
             self.backwards(5)
@@ -331,6 +330,20 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             self.block_in_sight(self.friend_location)
             if(angle < -3):
                 self.state = [0,2]
+        #go home at end - initially reverse
+        if self.state == [6,1]:
+            self.backwards(5)
+            if(self.count > 10):
+                self.state[1] += 1
+                self.count = 0
+            else:
+                self.count += 1
+        if self.state == [6,2]:
+            result = self.goToCoordinate([1, 1], False)
+            if(result == "Done"):
+                self.state[1] += 1
+        if self.state == [6,3]:
+            self.reset()
 
     def findBlocks(self):
         "main block finding algorithm"
