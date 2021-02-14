@@ -37,6 +37,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.spinDirection = 1
 
         self.friendStuck = False
+        self.phase2 = False
 
     def goToCoordinate(self, coordinate, check_collision):
         #TODO: Implement better method than using a check_collision bool
@@ -142,7 +143,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.friend_location = self.friend_position()
         self.update_block_locations()
         #print(self.state)
-        print(self.blockLocations)
+        #print(self.blockLocations)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
         #initial spin to get block positions
@@ -244,7 +245,10 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(self.count > 10):
                 self.count = 0
                 if(self.get_distance() < 40):
-                    self.state[1] += 1
+                    if(self.phase2 == False):
+                        self.state[1] += 1
+                    else:
+                        self.state = [0,9]
                 else:
                     self.state = [1,1]
             else:
@@ -281,6 +285,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.blockToFind = self.setBlockToFind()
                 #go back to find block state
                 self.state = [0,2]
+        #in phase 2
+        if self.state == [0,9]:
+            result = self.goToCoordinate([0, 0.56], False)
+            if(result == "Done"):
+                self.state = [0,6]
+            elif(result == "Robot"):
+                self.state = [4,1]
         #robot has reversed, but doesn't have block i.e. it fumbled it
         #first, put down grabbers
         if self.state == [1,1]:
@@ -302,12 +313,20 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
                 self.count = 0
             else:
-                self.count += 1
+                if(self.phase2 == False):
+                    self.state[1] += 1
+                else:
+                    self.state = [2,3]
         #go back to start
         if self.state == [2,2]:
             result = self.goToCoordinate([0.95, 0.95], False)
             if(result == "Done"):
                 self.state = [0,2]
+        #in phase 2
+        if self.state == [2,3]:
+            result = self.goToCoordinate([0, 0.56], False)
+            if(result == "Done"):
+                self.state = [2,2]
         #reverse a little on a potential robot collision (when doesn't have block)
         if self.state == [3,1]:
             self.backwards(8)
@@ -320,8 +339,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [4,1]:
             self.backwards(8)
             if(self.count > 4):
-                self.state = [0,6]
                 self.count = 0
+                if self.phase2 == False:
+                    self.state = [0,6]
+                else:
+                    self.state = [0,9]
             else:
                 self.count += 1
         #initiate phase 2
@@ -330,6 +352,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             #TODO: Collision handling for this
             result = self.goToCoordinate([0, 0.56], False)
             if(result == "Done"):
+                self.phase2 = True
                 self.state[1] += 1
                 self.block_in_sight(self.friend_location)
         #do initial sweep
