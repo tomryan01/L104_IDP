@@ -158,11 +158,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 #TODO: Search for more blocks if there are no blocks to be found
                 self.blockToFind = 0
                 """
-                This ends the loop here, but if commented out, the robot will continually loop blockToFind through
-                the remaining items in the list, never going to collect any of them because they are either declared
-                blue or result in a collision
+                IMPORTANT: This ommits cases where some blocks were unable to be collected due
+                to them being obstructed
                 """
-                #self.state[0] = 4
+                if(len(self.blockLocations) == 0):
+                    self.state = [5,1]
             else:
                 if(result == "Done"):
                     #once reached block move on
@@ -299,6 +299,12 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.count = 0
             else:
                 self.count += 1
+        #initiate phase 2
+        if self.state == [5,1]:
+            #TODO: Collision handling for this
+            result = self.goToCoordinate([0, -0.56], False)
+            if(result == "Done"):
+                self.state = [0,1]
 
     def findBlocks(self):
         "main block finding algorithm"
