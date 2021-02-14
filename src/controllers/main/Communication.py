@@ -67,8 +67,7 @@ class Communication(MyRobot):
             #first clock cycle
             return [0.95, -0.95]
     
-
-    def friend_distance(self, friend_position):
+    def will_collide_with_friend(self, friend_position):
         "return none if not looking at friend and the distance away if they are"
         front_position = self.front_position()
         my_orientation = self.norm_robot_orientation()
@@ -77,12 +76,12 @@ class Communication(MyRobot):
         dist, width = self.find_wall_distance(front_position, my_orientation, friend_position, perp_orientation)
         #if width is less than half width of robot then looking at him
         if abs(width) < self.ROBOT_WIDTH/1000:
-            return dist - self.ROBOT_WIDTH/2000
+            if abs(dist - self.ROBOT_WIDTH/2000) < 0.2:
+                return True
+            else: 
+                return False
         else:
-            return None
-
-
-
+            return False
 
     def looking_at_my_friend(self):
         "return true if looking at his friend, consideres angle and distance"

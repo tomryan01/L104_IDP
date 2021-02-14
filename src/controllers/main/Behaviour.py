@@ -29,6 +29,9 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #counter
         self.count = 0
 
+        #position of other robot
+        self.friend_location = None
+
         #*static* variables for checkForBlock functionn
         self.firstDirection = None
         self.spinDirection = 1
@@ -43,11 +46,14 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         dot_product = self.dot_product(orientation, mag_coordinate)
         if(self.get_magnitude(coordinate) > 0.2):
             if(abs(cross_product) < 0.02 and dot_product > 0):
-                if(not self.checkCollision(coordinate) or not check_collision):
-                    self.forwards(5)
+                if(not self.will_collide_with_friend(self.friend_location)):
+                    if(not self.checkCollision(coordinate) or not check_collision):
+                        self.forwards(5)
+                    else:
+                        print("Blue robot cannot collect block or it would collide")
+                        return "Collision"
                 else:
-                    print("Red robot cannot collect block or it would collide with another...")
-                    return "Collision"
+                    return "Robot"
             elif(cross_product < 0):
                 if(abs(cross_product) < 0.05):
                     self.spin(1, -1)
@@ -119,16 +125,22 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(b[2] == 0 or b[2] == 1):
                 b = [b[0] - self.mid_position()[0], b[1] - self.mid_position()[1]]
                 magnitudes.append(self.get_magnitude(b))
-        return magnitudes.index(min(magnitudes))
+            else:
+                magnitudes.append(float('inf'))
+        #if list is empty
+        if len(magnitudes) > 0:
+            return magnitudes.index(min(magnitudes))
+        else:
+            return 0
 
     def findBlocks2(self):
         "Test block finding algorithm"
         #must call this every time
         self.emit_my_position()
-        friend_location = self.friend_position()
+        self.friend_location = self.friend_position()
         self.update_block_locations()
         #print(self.state)
-        print(len(self.blockLocations))
+        #print(len(self.blockLocations))
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
         #initial spin to get block positions
@@ -163,6 +175,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 if(result == "Done"):
                     #once reached block move on
                     self.state[1] += 1
+                elif(result == "Robot"):
+                    self.state = [3,1]
                 elif(result == "Collision"):
                     #the robot should not collect the block
                     result = self.setBlockToFind()
@@ -183,20 +197,17 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [0,3]:
             if(self.red_colour() > self.blue_colour() + 20):
                 #block is red
-                print("a")
                 self.forwards(2)
                 if(self.block_in_distance()):
                     self.state[1] += 1
             elif(self.blue_colour() > self.red_colour() + 20):
                 #block is blue
-                print("b")
                 self.state = [2,1]
                 #update colour of found block
                 self.blockLocations[self.blockToFind][2] = 2
                 self.blockOriginalDistance = self.distance_from_start()
             else:
                 #block has gone
-                print("c")
                 emit = [self.blockLocations[self.blockToFind][0], self.blockLocations[self.blockToFind][1], 4]
                 self.emit_position(emit)
                 self.blockLocations.remove(self.blockLocations[self.blockToFind])
@@ -234,6 +245,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             result = self.goToCoordinate([1.06, 1.06], False)
             if(result == "Done"):
                 self.state[1] += 1
+            elif(result == "Robot"):
+                self.state = [4,1]
             elif(result == "Collision"):
                 pass
         #put down block
@@ -250,6 +263,9 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [0,8]:
             self.backwards(5)
             if(self.get_distance() > 55):
+                #update self.blockToFind
+                self.blockToFind = self.setBlockToFind()
+                #go back to find block state
                 self.state = [0,2]
         #robot has reversed, but doesn't have block i.e. it fumbled it
         #first, put down grabbers
@@ -278,6 +294,22 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             result = self.goToCoordinate([0.95, 0.95], False)
             if(result == "Done"):
                 self.state = [0,2]
+        #reverse a little on a potential robot collision (when doesn't have block)
+        if self.state == [3,1]:
+            self.backwards(8)
+            if(self.count > 4):
+                self.state = [0,2]
+                self.count = 0
+            else:
+                self.count += 1
+        #reverse a little on a potential robot collision (when has block)
+        if self.state == [4,1]:
+            self.backwards(8)
+            if(self.count > 4):
+                self.state = [0,6]
+                self.count = 0
+            else:
+                self.count += 1
 
     def findBlocks(self):
         "main block finding algorithm"
