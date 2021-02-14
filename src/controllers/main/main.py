@@ -24,8 +24,9 @@ while testRobot.robot.step(TIME_STEP) != -1:
     #current conditions
     testRobot.reset()
     
-    #testRobot.findBlocks2()
     testRobot.findBlocks2()
+
+
 
 
 """

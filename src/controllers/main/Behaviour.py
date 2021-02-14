@@ -125,7 +125,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         "Test block finding algorithm"
         #must call this every time
         self.emit_my_position()
-        looking_at_friend = self.looking_at_my_friend()
+        friend_location = self.friend_position()
         self.update_block_locations()
         #print(self.state)
         print(len(self.blockLocations))

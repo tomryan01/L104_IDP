@@ -56,7 +56,31 @@ class Communication(MyRobot):
                 if not(True in false_list):
                     self.blockLocations.append(data)
                 
-        
+
+    def friend_position(self):
+        "return friend position [x,z]"
+        data = self.receieve_position()
+        #if data was null assume not looking at friend
+        if data != None:
+            return [data[0], data[1]]
+        else:
+            #first clock cycle
+            return [0.95, -0.95]
+    
+
+    def friend_distance(self, friend_position):
+        "return none if not looking at friend and the distance away if they are"
+        front_position = self.front_position()
+        my_orientation = self.norm_robot_orientation()
+        perp_orientation = [my_orientation[1], -1*my_orientation[0]]
+        #dist is distance from my robot to intersection, width is distance along line of intersection
+        dist, width = self.find_wall_distance(front_position, my_orientation, friend_position, perp_orientation)
+        #if width is less than half width of robot then looking at him
+        if abs(width) < self.ROBOT_WIDTH/1000:
+            return dist - self.ROBOT_WIDTH/2000
+        else:
+            return None
+   
 
 
     def looking_at_my_friend(self):
