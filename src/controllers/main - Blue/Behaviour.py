@@ -52,8 +52,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     else:
                         print("Blue robot cannot collect block or it would collide")
                         return "Collision"
-                #else:
-                #    return "Robot"
+                else:
+                    return "Robot"
             elif(cross_product < 0):
                 if(abs(cross_product) < 0.05):
                     self.spin(1, -1)
@@ -138,7 +138,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
-        print(self.state)
+        #print(self.state)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
         
         #initial spin to get block positions
@@ -146,6 +146,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(abs(self.direction_from_start()) < 0.05):
                 #after one initial spin begin to look for blocks
                 self.state[1] += 1
+                self.blockToFind = self.setBlockToFind()
             else:
                 #on initial spin look for block positions but don't collect them
                 self.spin(1,self.spinDirection)
@@ -188,8 +189,15 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     #the block to find is red
                     result = self.setBlockToFind()
                     if result == self.blockToFind:
-                        #cannot be the same, as that is the block that caused the collision
-                        self.blockToFind += 1
+                        #check to see if all remaining blocks are red
+                        allRed = True
+                        for b in self.blockLocations:
+                            if(b[2] == 0 or b[1] == 2):
+                                allRed = False
+                        if(allRed):
+                            self.state = [5,1]
+                        else:
+                            self.blockToFind += 1 
                     else:
                         self.blockToFind = result
         #check block colour
@@ -257,9 +265,9 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(self.armsPosition == 0):
                 #iterate to next block to find
                 self.state[1] += 1
-                self.blocksDelivered += 1
-                if self.blocksDelivered >= 4:
-                    self.state = [6,1]
+                #self.blocksDelivered += 1
+                #if self.blocksDelivered >= 4:
+                #    self.state = [6,1]
         #reverse a little bit so don't hit block on spin
         if self.state == [0,8]:
             self.backwards(5)
@@ -334,6 +342,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     self.state = [6,1]
                 else:
                     self.state = [0,2]
+                    self.blockToFind = self.setBlockToFind()
         #go home at end - initially reverse
         if self.state == [6,1]:
             self.backwards(5)
