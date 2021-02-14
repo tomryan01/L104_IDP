@@ -36,6 +36,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.firstDirection = None
         self.spinDirection = -1
 
+        self.friendStuck = False
+
     def goToCoordinate(self, coordinate, check_collision):
         #TODO: Implement better method than using a check_collision bool
         "takes x,y,c coordinate, and drives to that point"
@@ -52,8 +54,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     else:
                         print("Blue robot cannot collect block or it would collide")
                         return "Collision"
-                #else:
-                #    return "Robot"
+                else:
+                    return "Robot"
             elif(cross_product < 0):
                 if(abs(cross_product) < 0.05):
                     self.spin(1, -1)
@@ -184,6 +186,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                         self.blockToFind += 1
                     else:
                         self.blockToFind = result
+                    #if friend is also stuck, both move to phase 2
+                    self.emit_position([0,0,5])
+                    if self.friendStuck:
+                        self.state = [5,1]
+                        self.friendStuck = False
                 elif(result == "Red"):
                     #the block to find is red
                     result = self.setBlockToFind()
@@ -304,7 +311,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state = [0,2]
         #reverse a little on a potential robot collision (when hasn't got block)
         if self.state == [3,1]:
-            self.backwards(8)
+            self.backwards(4)
             if(self.count > 4):
                 self.state = [0,2]
                 self.count = 0
@@ -312,8 +319,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.count += 1
         #reverse a little on a potential robot collision (when has block)
         if self.state == [4,1]:
-            self.backwards(5)
-            if(self.count > 8):
+            self.backwards(4)
+            if(self.count > 4):
                 self.state = [0,6]
                 self.count = 0
             else:
@@ -337,7 +344,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             angle = self.spinLeftRight(3.14)
             self.block_in_sight(self.friend_location)
             if(angle < -3):
-                if(len(self.blockLocations) == 0): 
+                allRed = True
+                for b in self.blockLocations:
+                    if(b[2] == 0 or b[1] == 2):
+                        allRed = False
+                if(len(self.blockLocations) == 0) or allRed: 
                     self.state = [6,1]
                 else:
                     self.state = [0,2]

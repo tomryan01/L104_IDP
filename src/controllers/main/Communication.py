@@ -5,7 +5,8 @@ class Communication(MyRobot):
     
     def emit_position(self, data):
         """Emit the positional data, takes argument of data = [x, z, info_bit]
-        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block and 3 for robot"""
+        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block, 3 for robot
+        4 for delete block, 5 for stuck on collision"""
 
         message = struct.pack("ddB", data[0], data[1], data[2])
         #emit signal
@@ -48,8 +49,12 @@ class Communication(MyRobot):
                             self.blockToFind -= 1
                         self.blockLocations.remove(b)
                         return "Deleted"
+            #if robot is stuck
+            if data[2] == 5:
+                self.friendStuck = True
             #if message is about adding item
             else:
+                self.friendStuck = False
                 false_list = []
                 for item in self.blockLocations:
                     false_list.append(self.same_block_coordinate(item, data))

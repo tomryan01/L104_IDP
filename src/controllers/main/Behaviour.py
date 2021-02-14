@@ -36,6 +36,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.firstDirection = None
         self.spinDirection = 1
 
+        self.friendStuck = False
+
     def goToCoordinate(self, coordinate, check_collision):
         #TODO: Implement better method than using a check_collision bool
         "takes x,y,c coordinate, and drives to that point"
@@ -139,8 +141,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
-        #print(self.state)
-        #print(len(self.blockLocations))
+        print(self.state)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
         #initial spin to get block positions
@@ -179,6 +180,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 elif(result == "Robot"):
                     self.state = [3,1]
                 elif(result == "Collision"):
+                    print("a")
                     #the robot should not collect the block
                     result = self.setBlockToFind()
                     if result == self.blockToFind:
@@ -186,22 +188,25 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                         self.blockToFind += 1
                     else:
                         self.blockToFind = result
+                    #if friend is also stuck, both move to phase 2
+                    self.emit_position([0,0,5])
+                    if self.friendStuck:
+                        self.state = [5,1]
+                        self.friendStuck = False
                 elif(result == "Blue"):
+                    print("d")
                     #the block to find is red
                     result = self.setBlockToFind()
                     if result == self.blockToFind:
                         #check to see if all remaining blocks are blue
                         allBlue = True
                         for b in self.blockLocations:
-                            if(b[2] == 0 or b[1] == 2):
+                            if(b[2] == 0 or b[1] == 1):
                                 allBlue = False
                         if(allBlue):
                             self.state = [5,1]
                         else:
                             self.blockToFind += 1 
-                        """
-                        PROBLEM TODO: if all blue stay at spin point and obstruct blue from access block
-                        """
                     else:
                         self.blockToFind = result
         #check block colour
@@ -342,7 +347,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             angle = self.spinLeftRight(3.14)
             self.block_in_sight(self.friend_location)
             if(angle > 3):
-                if(len(self.blockLocations) == 0): 
+                allBlue = True
+                for b in self.blockLocations:
+                    if(b[2] == 0 or b[1] == 1):
+                        allBlue = False
+                if(len(self.blockLocations) == 0) or allBlue: 
                     self.state = [6,1]
                 else:
                     self.state = [0,2]
