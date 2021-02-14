@@ -172,7 +172,7 @@ class Gps(MyRobot):
     def coordinate_in_my_box(self, coordinate):
         "return true if coordinate is in robots start box"
         if coordinate[0] >= 0.8 and coordinate[0] <= 1.2:
-            if coordinate[1] >= 0.8 and coordinate[1] <= 1.2:
+            if coordinate[1] <= -0.8 and coordinate[1] >= -1.2:
                 return True
             else:
                 return False
