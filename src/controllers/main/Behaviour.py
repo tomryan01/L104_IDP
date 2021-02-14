@@ -180,7 +180,6 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 elif(result == "Robot"):
                     self.state = [3,1]
                 elif(result == "Collision"):
-                    print("a")
                     self.blockToFind += 1
                     #the robot should not collect the block
                     #if friend is also stuck, both move to phase 2
@@ -189,7 +188,6 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                         self.state = [5,1]
                         self.friendStuck = False
                 elif(result == "Blue"):
-                    print("d")
                     #the block to find is red
                     #check to see if all remaining blocks are blue
                     allBlue = True
