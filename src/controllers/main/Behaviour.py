@@ -326,13 +326,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             self.spinDirection = -1
             angle = self.spinLeftRight(3.14)
             self.block_in_sight()
-            if(abs(angle) > 3):
+            if(angle < -3):
                 self.state[1] += 1
         if self.state == [5,3]:
             self.spinDirection = 1
             angle = self.spinLeftRight(3.14)
             self.block_in_sight()
-            if(abs(angle) > 3):
+            if(angle > 3):
                 self.state = [0,2]
 
 
