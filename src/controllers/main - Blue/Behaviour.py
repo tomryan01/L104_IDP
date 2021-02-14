@@ -138,7 +138,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
-        #print(self.state)
+        print(self.state)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
         
         #initial spin to get block positions
@@ -184,6 +184,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     else:
                         self.blockToFind = result
                 elif(result == "Red"):
+                    print('d')
                     #the block to find is red
                     result = self.setBlockToFind()
                     if result == self.blockToFind:
@@ -329,7 +330,10 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             angle = self.spinLeftRight(3.14)
             self.block_in_sight(self.friend_location)
             if(angle < -3):
-                self.state = [0,2]
+                if(len(self.blockLocations) == 0): 
+                    self.state = [6,1]
+                else:
+                    self.state = [0,2]
         #go home at end - initially reverse
         if self.state == [6,1]:
             self.backwards(5)
@@ -339,11 +343,12 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             else:
                 self.count += 1
         if self.state == [6,2]:
-            result = self.goToCoordinate([1, 1], False)
+            result = self.goToCoordinate([1, -1], False)
             if(result == "Done"):
                 self.state[1] += 1
         if self.state == [6,3]:
-            self.reset()
+            if(len(self.blockLocations)) > 0:
+                self.state = [0,2]
 
     def findBlocks(self):
         "main block finding algorithm"

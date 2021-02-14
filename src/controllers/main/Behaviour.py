@@ -331,7 +331,10 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             angle = self.spinLeftRight(3.14)
             self.block_in_sight(self.friend_location)
             if(angle > 3):
-                self.state = [0,2]
+                if(len(self.blockLocations) == 0): 
+                    self.state = [6,1]
+                else:
+                    self.state = [0,2]
         #go home at end - initially reverse
         if self.state == [6,1]:
             self.backwards(5)
@@ -345,7 +348,8 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(result == "Done"):
                 self.state[1] += 1
         if self.state == [6,3]:
-            self.reset()
+            if(len(self.blockLocations)) > 0:
+                self.state = [0,2]
 
 
     def findBlocks(self):
