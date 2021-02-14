@@ -17,14 +17,14 @@ class Grabber(MyRobot):
             self.arms[i].setVelocity(2)
             self.arms[i].setPosition(1.57)
         
-        #arms being moved up
-        self.armsPosition = 2
-
         #use count to determin if arms in final position and change position to 1, reset count
         self.armCount += 1
-        if self.armCount == 20:
+        if self.armCount >= 20:
             self.armsPosition = 1
             self.armCount = 0
+        else:
+            #arms being moved up
+            self.armsPosition = 2
 
     def put_down(self):
         #set target position as 0 so arms down

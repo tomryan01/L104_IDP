@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5527793527943275 0.6221411022434911 0.5544144983886498 4.252026418656893
-  position -0.5534176230954305 4.53275261054896 0.08680990659144704
+  orientation 0.5740445366161571 0.5771838709741114 0.5808025904457397 4.178435921292133
+  position -0.030811902719675224 4.660067308091324 -0.16635472034185206
 }
 TexturedBackground {
 }
@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation 1.05047 0 0.13992
+  translation 0.532734 -1.86517e-14 0.752984
   children [
     DEF BOX_R Shape {
       appearance PBRAppearance {
@@ -50,7 +50,7 @@ DEF Block_R1 Solid {
   }
 }
 DEF Block_R2 Solid {
-  translation 0.223806 0.05 -0.784472
+  translation 0.294731 0.05 0.95615
   children [
     USE BOX_R
   ]
@@ -61,7 +61,7 @@ DEF Block_R2 Solid {
   }
 }
 DEF Block_R3 Solid {
-  translation -1 0.05 -0.5
+  translation 0.246262 0.05 -0.75005
   children [
     USE BOX_R
   ]
@@ -71,7 +71,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation 0.1 0.05 1.1
+  translation 0.632243 0.05 0.662572
   children [
     USE BOX_R
   ]
@@ -81,7 +81,7 @@ DEF Block_R4 Solid {
   }
 }
 DEF Block_B1 Solid {
-  translation -1.1 0.05 1
+  translation 0.706337 0.05 -0.404065
   children [
     DEF BOX_B Shape {
       appearance PBRAppearance {
@@ -99,7 +99,7 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation 0.811892 0.05 -0.315797
+  translation 0.49881 0.05 -0.423614
   children [
     USE BOX_B
   ]
@@ -109,7 +109,7 @@ DEF Block_B2 Solid {
   }
 }
 DEF Block_B3 Solid {
-  translation 0.139741 0.05 0.387886
+  translation 0.465151 0.05 -0.675488
   children [
     USE BOX_B
   ]
@@ -119,7 +119,7 @@ DEF Block_B3 Solid {
   }
 }
 DEF Block_B4 Solid {
-  translation -0.343956 0.05 -0.929458
+  translation 0.415544 0.05 0.845773
   children [
     USE BOX_B
   ]
@@ -199,7 +199,7 @@ DEF WALL_4 Solid {
   boundingObject USE WALL_SHAPE
 }
 Little_Mike {
-  translation 0.95 0.042 0.95
+  translation 0.957953 0.052 0.966406
   colour 1 0.1 0.1
   controller "main"
 }

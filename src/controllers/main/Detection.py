@@ -213,7 +213,7 @@ class Detection(MyRobot):
         "return true if looking at any coordinate in a list"
         
         #list of true/false
-        true_false_list = [self.looking_at_coordinate(v) for v in coordinate_list]
+        true_false_list = [self.looking_at_coordinate(self.correct_coordinate(v)) for v in coordinate_list]
 
         #return none if all are false, but the index if true
         for i in range(len(true_false_list)):
@@ -286,6 +286,6 @@ class Detection(MyRobot):
 
         perp_vector = [ -1*norm_vector[1], norm_vector[0]]
 
-        corrected_coordinate = [coordinate[i] + 0.03 * perp_vector[i] for i in range(2)]
+        corrected_coordinate = [coordinate[i] + 0.01 * perp_vector[i] for i in range(2)]
 
         return [corrected_coordinate[0], corrected_coordinate[1]]

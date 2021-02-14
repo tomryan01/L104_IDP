@@ -115,7 +115,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         looking_at_friend = self.looking_at_my_friend()
         self.update_block_locations()
-        #print(self.state)
+        print(self.state)
         #TODO: Sort state labelling out, sorry, I'm tired and lazy
 
         #initial spin to get block positions
@@ -125,13 +125,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
             else:
                 #on initial spin look for block positions but don't collect them
-                self.spin(1,1)
+                self.spin(1,-1)
                 self.block_in_sight()
         #go to block
         if self.state == [0,2]:
             try:
                 #go to the current coordinate
-                if(self.blockLocations[self.blockToFind][2] == 0 or self.blockLocations[self.blockToFind][2] == 1):
+                if(self.blockLocations[self.blockToFind][2] == 0 or self.blockLocations[self.blockToFind][2] == 2):
                     result = self.goToCoordinate(self.blockLocations[self.blockToFind], True)
                 else:
                     result = "Blue"
@@ -158,16 +158,16 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                     self.blockToFind += 1
         #check block colour
         if self.state == [0,3]:
-            if(self.red_colour() > self.blue_colour() + 20):
-                #block is red
+            if(self.blue_colour() > self.red_colour() + 20):
+                #block is blue
                 self.forwards(2)
                 if(self.block_in_distance()):
                     self.state[1] += 1
             else:
-                #block is blue
+                #block is red
                 self.state = [2,1]
                 #update colour of found block
-                self.blockLocations[self.blockToFind][2] = 2
+                self.blockLocations[self.blockToFind][2] = 1
                 self.blockOriginalDistance = self.distance_from_start()
         #pick up red block
         if self.state == [0,4]:
@@ -196,7 +196,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             the likelihood of a blue block coming into the way in this time period may be too little
             to care about
             """
-            result = self.goToCoordinate([1.06, 1.06], False)
+            result = self.goToCoordinate([1.06, -1.06], False)
             if(result == "Done"):
                 self.state[1] += 1
             elif(result == "Collision"):
@@ -237,7 +237,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state[1] += 1
         #go back to start
         if self.state == [2,2]:
-            result = self.goToCoordinate([0.95, 0.95], False)
+            result = self.goToCoordinate([0.95, -0.95], False)
             if(result == "Done"):
                 self.state = [0,2]
 

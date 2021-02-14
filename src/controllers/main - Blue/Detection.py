@@ -8,7 +8,7 @@ class Detection(MyRobot):
         super().__init__()
         
         #set origin/start point for robot
-        self.origin = [1, 1]
+        self.origin = [1, -1]
 
     def find_wall_distance(self, robot_position, robot_orientation, wall_position, wall_direction):
         """find the intersection of two 2D vector lines
@@ -213,7 +213,7 @@ class Detection(MyRobot):
         "return true if looking at any coordinate in a list"
         
         #list of true/false
-        true_false_list = [self.looking_at_coordinate(v) for v in coordinate_list]
+        true_false_list = [self.looking_at_coordinate(self.correct_coordinate(v)) for v in coordinate_list]
 
         #return none if all are false, but the index if true
         for i in range(len(true_false_list)):
@@ -284,8 +284,8 @@ class Detection(MyRobot):
 
         norm_vector = [vector_to_point[i] / self.get_magnitude(vector_to_point) for i in range(2)]
 
-        perp_vector = [ -1*norm_vector[1], norm_vector[0]]
+        perp_vector = [ norm_vector[1], -1*norm_vector[0]]
 
-        corrected_coordinate = [coordinate[i] + 0.03 * perp_vector[i] for i in range(2)]
+        corrected_coordinate = [coordinate[i] + 0.01 * perp_vector[i] for i in range(2)]
 
         return [corrected_coordinate[0], corrected_coordinate[1]]

@@ -94,6 +94,30 @@ class Gps(MyRobot):
         return distance_to_origin
 
 
+    def direction_from_vector(self, v1, v2):
+        " get the angle between two vectors "
+
+        #normalise vectors to unit length
+        norm_v1 = [v1[i] / self.get_magnitude(v1) for i in range(2)]
+        norm_v2 = [v2[i] / self.get_magnitude(v2) for i in range(2)]
+
+        #find their dot product, if positive then robot facing start
+        dot_product = self.dot_product(norm_v1, norm_v2)
+
+        #find their cross product (origin x robot), if positive then need to turn right, negative if need to turn left
+        cross_product = self.cross_product(norm_v1, norm_v2)
+
+        #find and return desired angle
+        if dot_product > 0:
+            angle =  math.asin(cross_product)
+        else:
+            if cross_product > 0:
+                angle =  (math.pi - math.asin(cross_product))
+            else:
+                angle =  (-math.pi - math.asin(cross_product))
+
+        return angle
+
     def direction_from_start(self):
         """return the direction of the robot facing, relative to start direction
         funtion will return number of radians needed to turn
@@ -107,6 +131,7 @@ class Gps(MyRobot):
         for i in range(2):
             origin_direction.append(self.origin[i] - mid_position_xz[i])
 
+        #TODO: Have this simply use the direction_from_vector method
         #normalise vectors to unit length
         norm_robot_orientation = self.norm_robot_orientation()
         norm_origin_direction = [origin_direction[i] / self.get_magnitude(origin_direction) for i in range(2)]
@@ -125,7 +150,7 @@ class Gps(MyRobot):
                 directionFromStart =  (math.pi - math.asin(cross_product))
             else:
                 directionFromStart =  (-math.pi - math.asin(cross_product))
-        
+
         return directionFromStart
 
 

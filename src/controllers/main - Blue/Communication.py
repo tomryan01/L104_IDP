@@ -23,7 +23,7 @@ class Communication(MyRobot):
             message = self.receiver[0].getData()
             self.receiver[0].nextPacket()
             data = struct.unpack("ddB", message)
-            return data
+            return [data[0], data[1], data[2]]
         
     
 
