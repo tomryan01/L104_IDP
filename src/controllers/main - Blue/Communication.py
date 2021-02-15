@@ -50,9 +50,9 @@ class Communication(MyRobot):
                         self.blockLocations.remove(b)
                         return "Deleted"
             #if robot is stuck
-            if data[2] == 5:
+            elif data[2] == 5:
                 self.friendStuck = True
-            if data[2] == 6:
+            elif data[2] == 6:
                 self.phase2 = True
             #if message is about adding item
             else:
