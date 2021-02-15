@@ -40,7 +40,7 @@ PROTO Little_Mike [
       device [
         RotationalMotor {
           name "arm_1"
-          maxTorque 0.15
+          maxTorque 0.35
         }
       ]
       endPoint DEF Arm_1 Solid {
@@ -90,7 +90,7 @@ PROTO Little_Mike [
       device [
         RotationalMotor {
           name "arm_2"
-          maxTorque 0.15
+          maxTorque 0.35
         }
       ]
       endPoint DEF Arm_1 Solid {

@@ -246,7 +246,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.count = 0
                 if(self.get_distance() < 40):
                     if(self.phase2 == False):
-                        self.state[1] += 1
+                        self.state = [0,10]
                     else:
                         self.state = [0,9]
                 else:
@@ -288,6 +288,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #in phase 2
         if self.state == [0,9]:
             result = self.goToCoordinate([0, 0.56], False)
+            if(result == "Done"):
+                self.state = [0,6]
+            elif(result == "Robot"):
+                self.state = [4,1]
+        #little add for going home
+        if self.state == [0,10]:
+            result = self.goToCoordinate([0.8, 0.8], False)
             if(result == "Done"):
                 self.state = [0,6]
             elif(result == "Robot"):
@@ -337,11 +344,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.count += 1
         #reverse a little on a potential robot collision (when has block)
         if self.state == [4,1]:
-            self.backwards(8)
-            if(self.count > 4):
+            self.backwards(2)
+            if(self.count > 1):
                 self.count = 0
                 if self.phase2 == False:
-                    self.state = [0,6]
+                    self.state = [0,10]
                 else:
                     self.state = [0,9]
             else:
