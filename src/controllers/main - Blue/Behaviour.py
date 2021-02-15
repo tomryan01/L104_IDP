@@ -140,6 +140,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
+        #print(self.blockLocations)
         
         #initial spin to get block positions
         if self.state == [0,1]:
@@ -187,9 +188,9 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                             isStuck = False
                     if(isStuck):
                         self.emit_position([0,0,5])
-                    if self.friendStuck:
-                        self.state = [5,1]
-                        self.friendStuck = False
+                        if self.friendStuck:
+                            self.state = [5,1]
+                            self.friendStuck = False
                 elif(result == "Red"):
                     #the block to find is red
                     #check to see if all remaining blocks are red
@@ -222,7 +223,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.emit_position(emit)
                 self.blockLocations.remove(self.blockLocations[self.blockToFind])
                 self.blockToFind -= 1
-                self.state[1] = 6
+                #go back to start, block wasn't found
+                if(self.phase2 == False):
+                    self.state = [0,10]
+                else:
+                    self.state = [0,9]
         #pick up Blue block
         if self.state == [0,4]:
             self.pick_up()
@@ -297,18 +302,20 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [1,2]:
             if(self.checkForBlock() == "Done"):
                 #go back to start, block wasn't found
-                self.state = [0,6]
+                if(self.phase2 == False):
+                    self.state = [0,10]
+                else:
+                    self.state = [0,9]
             elif(self.checkForBlock() == "Found"):
                 #block was found, go get it
                 self.state = [0,2]
-        #block is blue
+        #block is red
         #first reverse a little
         if self.state == [2,1]:
             self.backwards(5)
+            self.count += 1
             if(self.count > 10):
-                self.state[1] += 1
                 self.count = 0
-            else:
                 if(self.phase2 == False):
                     self.state[1] += 1
                 else:
@@ -373,7 +380,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 else:
                     self.state = [0,2]
                     self.blockToFind = self.setBlockToFind()
-        #go home at end - initially reverse
+        #go home if no blocks left
         if self.state == [6,1]:
             self.backwards(5)
             if(self.count > 10):
