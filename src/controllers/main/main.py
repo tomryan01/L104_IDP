@@ -17,7 +17,6 @@ testRobot.setGps(["gps_front", "gps_mid"], TIME_STEP)
 testRobot.setEmitter(["emitter"])
 testRobot.setReceiver(["receiver"], TIME_STEP)
 
-
 while testRobot.robot.step(TIME_STEP) != -1:
     #every single tick we call the reset method to
     #set all motor velocities etc. to 0, then when findBlocks() is
@@ -26,8 +25,6 @@ while testRobot.robot.step(TIME_STEP) != -1:
     testRobot.reset()
     
     testRobot.findBlocks2()
-
-
 
 
 """
