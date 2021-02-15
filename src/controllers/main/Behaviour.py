@@ -140,7 +140,6 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         self.emit_my_position()
         self.friend_location = self.friend_position()
         self.update_block_locations()
-        #print(self.state)
 
         #initial spin to get block positions
         if self.state == [0,1]:
@@ -192,7 +191,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                             self.state = [5,1]
                             self.friendStuck = False
                 elif(result == "Blue"):
-                    #the block to find is red
+                    #the block to find is blue
                     #check to see if all remaining blocks are blue
                     allBlue = True
                     for b in self.blockLocations:
@@ -332,16 +331,16 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state = [2,2]
         #reverse a little on a potential robot collision (when doesn't have block)
         if self.state == [3,1]:
-            self.backwards(2)
-            if(self.count > 2):
+            self.backwards(1)
+            if(self.count > 1):
                 self.state = [0,2]
                 self.count = 0
             else:
                 self.count += 1
         #reverse a little on a potential robot collision (when has block)
         if self.state == [4,1]:
-            self.backwards(8)
-            if(self.count > 8):
+            self.backwards(10)
+            if(self.count > 10):
                 self.count = 0
                 if self.phase2 == False:
                     self.state = [0,10]
