@@ -62,6 +62,10 @@ class Communication(MyRobot):
                     false_list.append(self.same_block_coordinate(item, data))
                 if not(True in false_list):
                     self.blockLocations.append(data)
+        #check not added a robot position by accident 
+        for item in self.blockLocations:
+            if item[2] == 3:
+                self.blockLocations.remove(item)
                 
 
     def friend_position(self):

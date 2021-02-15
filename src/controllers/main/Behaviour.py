@@ -399,6 +399,13 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [6,3]:
             if(len(self.blockLocations)) > 0:
                 self.state = [0,2]
+        if self.robot.getTime() > 280:
+            result = self.goToCoordinate([1.13, 1.13], False)
+            if(result == "Done"):
+                self.state[1] = [7,1]
+        if self.state == [7,1]:
+            self.reset()
+
 
 
     def findBlocks(self):
