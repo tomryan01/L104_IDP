@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation -0.769705 0.05 -0.960483
+  translation -0.862513 0.05 -0.240947
   children [
     DEF BOX_R Shape {
       appearance PBRAppearance {
@@ -49,7 +49,7 @@ DEF Block_R1 Solid {
   }
 }
 DEF Block_R2 Solid {
-  translation -0.749278 0.05 -0.27226
+  translation -0.229829 0.05 -1.00351
   rotation 0 1 0 3.14159
   children [
     USE BOX_R
@@ -60,7 +60,7 @@ DEF Block_R2 Solid {
   }
 }
 DEF Block_R3 Solid {
-  translation -0.925658 0.05 0.485413
+  translation -1.01898 0.05 0.478394
   rotation 0 1 0 1.5708
   children [
     USE BOX_R
@@ -71,7 +71,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation -0.455328 0.05 -0.417971
+  translation 0.839793 0.05 0.000233501
   rotation 0 1 0 3.14159
   children [
     USE BOX_R
@@ -82,7 +82,7 @@ DEF Block_R4 Solid {
   }
 }
 DEF Block_B1 Solid {
-  translation -0.828568 0.05 0.0380159
+  translation 1.02068 0.05 0.281656
   children [
     DEF BOX_B Shape {
       appearance PBRAppearance {
@@ -100,7 +100,8 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation -0.74096 0.05 0.897346
+  translation -0.423921 0.05 0.818513
+  rotation 0 1 0 2.38716e-06
   children [
     USE BOX_B
   ]
@@ -110,7 +111,7 @@ DEF Block_B2 Solid {
   }
 }
 DEF Block_B3 Solid {
-  translation -0.820846 0.05 -0.782928
+  translation -0.800122 0.05 -0.116249
   children [
     USE BOX_B
   ]
@@ -120,7 +121,7 @@ DEF Block_B3 Solid {
   }
 }
 DEF Block_B4 Solid {
-  translation -0.543715 0.05 -0.904445
+  translation -0.271071 0.05 -0.730114
   children [
     USE BOX_B
   ]

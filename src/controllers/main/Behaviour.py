@@ -47,7 +47,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         mag_coordinate = [coordinate[0]/self.get_magnitude(coordinate), coordinate[1]/self.get_magnitude(coordinate)]
         cross_product = self.cross_product(orientation, mag_coordinate)
         dot_product = self.dot_product(orientation, mag_coordinate)
-        if(self.get_magnitude(coordinate) > 0.2):
+        if(self.get_magnitude(coordinate) > 0.3):
             if(abs(cross_product) < 0.02 and dot_product > 0):
                 if(not self.will_collide_with_friend(self.friend_location)):
                     if(not self.checkCollision(coordinate) or not check_collision):
@@ -261,7 +261,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             the likelihood of a blue block coming into the way in this time period may be too little
             to care about
             """
-            result = self.goToCoordinate([1.06, 1.06], False)
+            result = self.goToCoordinate([1.13, 1.13], False)
             if(result == "Done"):
                 self.state[1] += 1
             elif(result == "Robot"):
@@ -353,6 +353,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             result = self.goToCoordinate([0, 0.56], False)
             if(result == "Done"):
                 self.phase2 = True
+                self.emit_position([0,0,6])
                 self.state[1] += 1
                 self.block_in_sight(self.friend_location)
         #do initial sweep
@@ -385,7 +386,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             else:
                 self.count += 1
         if self.state == [6,2]:
-            result = self.goToCoordinate([1.05, 1.05], False)
+            result = self.goToCoordinate([1.13, 1.13], False)
             if(result == "Done"):
                 self.state[1] += 1
         if self.state == [6,3]:
