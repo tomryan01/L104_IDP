@@ -178,3 +178,13 @@ class Gps(MyRobot):
                 return False
         else:
             return False
+
+
+    def coordinate_is_wall(self, coordinate):
+        "return true if coordinate is part of the wall"
+        if coordinate[0] >= 1.15 or coordinate[0] <= -1.15:
+            return True
+        elif coordinate[1] >= 1.15 or coordinate[1] <= -1.15:
+            return True
+        else:
+            return False

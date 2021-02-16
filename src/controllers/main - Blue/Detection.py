@@ -81,7 +81,7 @@ class Detection(MyRobot):
         critical_wall_dist = min(positive_wall_dists[0], positive_wall_dists[1])
 
         #Check block isnt in your corner or friend corner
-        if not(self.coordinate_in_my_box(self.coordinate_looking_at())) and not(self.distance_inside_friend_corner()) and not(self.looking_at_friend(friend_position)):
+        if not(self.coordinate_in_my_box(self.coordinate_looking_at())) and not(self.distance_inside_friend_corner()) and not(self.looking_at_friend(friend_position)) and not(self.coordinate_is_wall(self.coordinate_looking_at())):
 
             #return true if the distance sensor value is less than the wall distance
             if self.get_distance() < 1000 * critical_wall_dist and self.get_distance() < 1390:
@@ -119,7 +119,7 @@ class Detection(MyRobot):
 
     def block_in_distance(self):
         "return true if distance sensor less than 2.2cm"
-        if self.distanceSensors[0].getValue() < 22:
+        if self.get_distance() < 22:
             return True
         else:
             return False
@@ -127,7 +127,7 @@ class Detection(MyRobot):
 
     def block_in_colour_sensor_range(self):
         "return true if distance sensor less than 10cm"
-        if self.distanceSensors[0].getValue() < 100:
+        if self.get_distance() < 100:
             return True
         else:
             return False
@@ -135,7 +135,7 @@ class Detection(MyRobot):
 
     def get_distance(self):
         "return true if distance sensor value in mm"
-        return self.distanceSensors[0].getValue()
+        return abs(1400 - self.distanceSensors[0].getValue())
     
     
     def coordinate_looking_at(self):
@@ -148,7 +148,7 @@ class Detection(MyRobot):
         norm_robot_orientation = self.norm_robot_orientation()
 
         #get distance seen by sensor
-        distance_seen = self.distanceSensors[0].getValue() / 1000
+        distance_seen = self.get_distance() / 1000
 
         coordinate_seen = []
         for i in range(2):
@@ -266,7 +266,7 @@ class Detection(MyRobot):
             max_wall_dist = max(true_wall_dist)
             min_wall_dist = min(true_wall_dist)
             #if between then looking through
-            if self.distanceSensors[0].getValue() > 1000 * min_wall_dist and self.distanceSensors[0].getValue() < 1000 * max_wall_dist:
+            if self.get_distance() > 1000 * min_wall_dist and self.get_distance() < 1000 * max_wall_dist:
                 return True
             else:
                 return False
@@ -275,7 +275,7 @@ class Detection(MyRobot):
         critical_wall_dist = min(true_wall_dist)
         
         #return true if the distance sensor value is looking into the arena
-        if self.distanceSensors[0].getValue() > 1000 * critical_wall_dist:
+        if self.get_distance() > 1000 * critical_wall_dist:
             return True
         else:
             return False
