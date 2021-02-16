@@ -31,7 +31,7 @@ PROTO Little_Mike [
         0 1400 0
         0.1 1300 0
         0.5 900 0.01
-        1.4 0 0
+        1.4 0 0.01
       ]
     }
     DEF Arm1 HingeJoint {
