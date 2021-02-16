@@ -280,7 +280,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state = [0,2]
         #in phase 2
         if self.state == [0,9]:
-            result = self.goToCoordinate([0, 0.56], False)
+            result = self.goToCoordinate([-0.1, 0.46], False)
             if(result == "Done"):
                 self.state = [0,6]
             elif(result == "Robot"):
@@ -326,7 +326,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 self.state = [0,2]
         #in phase 2
         if self.state == [2,3]:
-            result = self.goToCoordinate([0, 0.56], False)
+            result = self.goToCoordinate([-0.1, 0.46], False)
             if(result == "Done"):
                 self.state = [2,2]
         #reverse a little on a potential robot collision (when doesn't have block)
@@ -351,7 +351,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         #initiate phase 2
         #go to start position
         if self.state == [5,1]:
-            result = self.goToCoordinate([0, 0.56], False)
+            result = self.goToCoordinate([-0.1, 0.46], False)
             if(result == "Done"):
                 self.phase2 = True
                 self.emit_position([0,0,6])
