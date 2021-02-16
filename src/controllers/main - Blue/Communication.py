@@ -5,7 +5,8 @@ class Communication(MyRobot):
     
     def emit_position(self, data):
         """Emit the positional data, takes argument of data = [x, z, info_bit]
-        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block and 3 for robot"""
+        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block, 3 for robot
+        4 for delete block, 5 for stuck on collision, 6 for phase 2"""
 
         message = struct.pack("ddB", data[0], data[1], data[2])
         #emit signal
@@ -48,13 +49,23 @@ class Communication(MyRobot):
                             self.blockToFind -= 1
                         self.blockLocations.remove(b)
                         return "Deleted"
+            #if robot is stuck
+            elif data[2] == 5:
+                self.friendStuck = True
+            elif data[2] == 6:
+                self.phase2 = True
             #if message is about adding item
             else:
+                self.friendStuck = False
                 false_list = []
                 for item in self.blockLocations:
                     false_list.append(self.same_block_coordinate(item, data))
                 if not(True in false_list):
                     self.blockLocations.append(data)
+        #check not added a robot position by accident 
+        for item in self.blockLocations:
+            if item[2] == 3:
+                self.blockLocations.remove(item)
                 
 
     def friend_position(self):
@@ -80,47 +91,6 @@ class Communication(MyRobot):
             if abs(dist - self.ROBOT_WIDTH/2000) < 0.2:
                 return True
             else: 
-                return False
-        else:
-            return False
-
-    def looking_at_my_friend(self):
-        "return true if looking at his friend, consideres angle and distance"
-        data = self.receieve_position()
-        #if data was null assume not looking at friend
-        if data != None:
-            friend_position = [data[0], data[1]]
-        else:
-            return False
-
-        #get position of front of robot
-        front_position_xz = self.front_position()
-        #get position of middle of robot
-        mid_position_xz = self.mid_position()
-
-        #find notmal orientation of robot in [x,z]
-        norm_robot_orientation = self.norm_robot_orientation()
-
-        #fiend direction of friend
-        friend_direction = []
-        for i in range(2):
-            friend_direction.append(friend_position[i] - mid_position_xz[i])
-        #normalise
-        norm_friend_direction = [friend_direction[i] / self.get_magnitude(friend_direction) for i in range(2)]
-        
-        #find out if they are parallel
-        dot_product = self.dot_product(norm_robot_orientation, norm_friend_direction)
-
-        #dot product is cos(angle between them) and we can calc the critical angle between them from the extreme case:
-        vector_between = [friend_position[i] - front_position_xz[i] for i in range(2)]
-        dist_between = self.get_magnitude(vector_between)
-        critical_cos_theta = dist_between / (dist_between**2 + 0.2**2)**0.5
-        
-        #return true if looking at friend
-        if abs(dot_product) > critical_cos_theta and dot_product > 0:
-            if self.get_distance() / 1000 > dist_between - 0.2:
-                return True
-            else:
                 return False
         else:
             return False
