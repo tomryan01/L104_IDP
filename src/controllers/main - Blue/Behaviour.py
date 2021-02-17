@@ -146,7 +146,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             if(abs(self.direction_from_start()) < 0.05):
                 #after one initial spin begin to look for blocks
                 self.state[1] += 1
-                print("They know the location of", len(self.blockLocations), "Blocks")
+                print("\033[0;34;40mThey know the location of", len(self.blockLocations), "Blocks")
                 self.blockToFind = self.setBlockToFind()
             else:
                 #on initial spin look for block positions but don't collect them
@@ -207,11 +207,11 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
                 #block is blue
                 self.forwards(2)
                 if(self.block_in_distance()):
-                    print("Blue found a Blue Block")
+                    print("\033[0;34;40mBlue found a Blue Block")
                     self.state[1] += 1
             elif(self.red_colour() > self.blue_colour() + 20):
                 #block is red
-                print("Blue found a Red Block")
+                print("\033[0;34;40mBlue found a Red Block")
                 self.state = [2,1]
                 #update colour of found block
                 self.blockLocations[self.blockToFind][2] = 1
@@ -267,7 +267,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
         if self.state == [0,7]:
             self.put_down()
             if(self.armsPosition == 0):
-                print("Blue delivered a Block")
+                print("\033[0;34;40mBlue delivered a Block")
                 #iterate to next block to find
                 self.state[1] += 1
         #reverse a little bit so don't hit block on spin
@@ -369,7 +369,7 @@ class Behaviour(Detection, Drive, Gps, Grabber, Communication):
             angle = self.spinLeftRight(3.14)
             self.block_in_sight(self.friend_location)
             if(angle < -3):
-                print("They the location of", len(self.blockLocations), "Blocks")
+                print("\033[0;34;40mThey know the location of", len(self.blockLocations), "Blocks")
                 allRed = True
                 for b in self.blockLocations:
                     if(b[2] == 0 or b[2] == 2):
