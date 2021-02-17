@@ -12,7 +12,7 @@ class Gps(MyRobot):
         return a[0]*b[0]+a[1]*b[1]
 
     def cross_product(self, a, b):
-        "return cross product of two 2d vectors"
+        "return cross product of two 2d vectors as a scalar"
         return a[0]*b[1]-a[1]*b[0]
 
     def mid_position(self):
@@ -75,27 +75,8 @@ class Gps(MyRobot):
         return distance_to_origin
 
 
-    def back_distance_from_start(self):
-        "return distance from the start, of the back of the robot"
-        #get positions of robot
-        front_position_xz = self.front_position()
-        mid_position_xz = self.mid_position()
-
-        difference_xz = [front_position_xz[i] - mid_position_xz[i] for i in range(2)]
-        back_position_xz = [mid_position_xz[i] - difference_xz[i] for i in range(2)]
-
-        #find distance from orgin
-        vector_to_origin = []
-        for i in range(2):
-            vector_to_origin.append(back_position_xz[i] - self.origin[i])
-        distance_to_origin = self.get_magnitude(vector_to_origin)
-
-        #return distance from origin
-        return distance_to_origin
-
-
     def direction_from_vector(self, v1, v2):
-        " get the angle between two vectors "
+        "get the angle between two vectors"
 
         #normalise vectors to unit length
         norm_v1 = [v1[i] / self.get_magnitude(v1) for i in range(2)]
@@ -131,7 +112,6 @@ class Gps(MyRobot):
         for i in range(2):
             origin_direction.append(self.origin[i] - mid_position_xz[i])
 
-        #TODO: Have this simply use the direction_from_vector method
         #normalise vectors to unit length
         norm_robot_orientation = self.norm_robot_orientation()
         norm_origin_direction = [origin_direction[i] / self.get_magnitude(origin_direction) for i in range(2)]

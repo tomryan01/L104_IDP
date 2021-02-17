@@ -1,4 +1,4 @@
-#This file contains the MyRobot class which sets out a template for an entire robot
+"This file contains the MyRobot class which sets out a template for an entire robot"
 
 from controller import Robot
 
@@ -27,12 +27,12 @@ class MyRobot:
         self.numEmitters = 1
         self.numReceivers = 1
 
-        #constants for robot
+        #constants for robot - extra to allow for errors and tolerances
         self.ROBOT_WIDTH = 300 #mm
 
-    #The following methods are used to set up the devices for a robot
-    #Each method begins by asserting the length of names in the list
-    #Is the number of sensors specified
+    """The following methods are used to set up the devices for a robot
+    Each method begins by asserting the length of names in the list
+    is the number of sensors specified"""
     def setWheels(self, wheelNames):
         assert len(wheelNames) == self.numWheels
         for i in range(self.numWheels):
@@ -76,6 +76,7 @@ class MyRobot:
             self.receiver[i].enable(samplingPeriod)
             
     def reset(self):
+        "Should be called every clock cycle to ensure motors only move when set to in the code"
         self.wheels[0].setVelocity(0)
         self.wheels[1].setVelocity(0)
         self.arms[0].setVelocity(0)

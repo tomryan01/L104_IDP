@@ -14,7 +14,7 @@ class Drive(MyRobot):
         self.wheels[1].setVelocity(-1 * speed)
 
     def spin(self, speed, direction):
-        #direction parameter is -1 to left, 1 to right
+        "direction parameter is -1 to left, 1 to right"
         assert direction == -1 or direction == 1
         self.wheels[0].setVelocity(direction * speed)
         self.wheels[1].setVelocity(-1 * direction * speed)

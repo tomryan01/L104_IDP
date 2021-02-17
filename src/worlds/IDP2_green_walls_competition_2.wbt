@@ -18,8 +18,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.9999964887743074 0.001872653332816245 0.0018749956137128134 4.711135469155584
-  position 0.030879692538182096 6.737687877263662 -0.011000869662224202
+  orientation -0.5860235775718814 -0.5872839520681383 -0.5582776425516983 2.1468741679448433
+  position 0.03304824211609146 4.223382678734574 -0.3028923101289418
 }
 TexturedBackground {
 }
@@ -31,7 +31,7 @@ Floor {
   }
 }
 DEF Block_R1 Solid {
-  translation -0.426184 0.05 -0.152632
+  translation 0.7396 0.05 1.0751
   children [
     DEF BOX_R Shape {
       appearance PBRAppearance {
@@ -49,8 +49,7 @@ DEF Block_R1 Solid {
   }
 }
 DEF Block_R2 Solid {
-  translation -0.336083 0.05 0.636073
-  rotation 0 1 0 3.14159
+  translation 0.977 0.05 0.6057
   children [
     USE BOX_R
   ]
@@ -60,8 +59,7 @@ DEF Block_R2 Solid {
   }
 }
 DEF Block_R3 Solid {
-  translation 0.77262 0.05 0.108408
-  rotation 0 1 0 1.5708
+  translation -0.8766 0.05 -0.8046
   children [
     USE BOX_R
   ]
@@ -71,8 +69,7 @@ DEF Block_R3 Solid {
   }
 }
 DEF Block_R4 Solid {
-  translation -0.0343742 0.05 -0.673006
-  rotation 0 1 0 3.14159
+  translation -0.1839 0.05 0.42
   children [
     USE BOX_R
   ]
@@ -82,7 +79,7 @@ DEF Block_R4 Solid {
   }
 }
 DEF Block_B1 Solid {
-  translation 0.452105 0.05 -1.03034
+  translation 0.311 0.05 1.0743
   children [
     DEF BOX_B Shape {
       appearance PBRAppearance {
@@ -100,8 +97,7 @@ DEF Block_B1 Solid {
   }
 }
 DEF Block_B2 Solid {
-  translation -0.743795 0.05 -0.0862049
-  rotation 0 1 0 2.38716e-06
+  translation -0.9458 0.05 -0.0344
   children [
     USE BOX_B
   ]
@@ -111,7 +107,7 @@ DEF Block_B2 Solid {
   }
 }
 DEF Block_B3 Solid {
-  translation 0.955046 0.05 0.323713
+  translation -0.5205 0.05 0.7057
   children [
     USE BOX_B
   ]
@@ -121,7 +117,7 @@ DEF Block_B3 Solid {
   }
 }
 DEF Block_B4 Solid {
-  translation -0.052766 0.05 0.600747
+  translation 0.1102 0.05 -0.8416
   children [
     USE BOX_B
   ]

@@ -15,7 +15,8 @@ class Communication(MyRobot):
         
     def receieve_position(self):
         """Return the position recieved [x,z, info_bit]
-        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block and 3 for robot"""
+        where info_bit = 0 for unknown block, 1 for red block, 2 for blue block and 3 for robot
+        4 for delete block, 5 for stuck on collision, 6 for phase 2"""
 
         #ensure there is data in the queue
         queue_length = self.receiver[0].getQueueLength()
@@ -48,7 +49,6 @@ class Communication(MyRobot):
                         if self.blockToFind >= self.blockLocations.index(b):
                             self.blockToFind -= 1
                         self.blockLocations.remove(b)
-                        return "Deleted"
             #if robot is stuck
             elif data[2] == 5:
                 self.friendStuck = True
@@ -71,7 +71,7 @@ class Communication(MyRobot):
     def friend_position(self):
         "return friend position [x,z]"
         data = self.receieve_position()
-        #if data was null assume not looking at friend
+        #if data was null assume not looking at friend as he is at home, first clock cycle
         if data != None:
             return [data[0], data[1]]
         else:

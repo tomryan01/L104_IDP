@@ -33,7 +33,7 @@ When copying for second robot, things that need to be changed are:
 Behaviour: 
     - block colour red/blue, spin direction x2
     - update setting red found blocks to 1, and can only go for 0 and 2
-    - update [1.06, 1.06]
-Detection: origin position, friend corner wall definitions, spin direction correct coordinate
+    - update location of home
+Detection: origin position, friend corner wall definitions
 Gps: my box coordinate definitions
 """

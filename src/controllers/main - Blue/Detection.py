@@ -80,7 +80,7 @@ class Detection(MyRobot):
         #extract the critical (minium positive) wall distance
         critical_wall_dist = min(positive_wall_dists[0], positive_wall_dists[1])
 
-        #Check block isnt in your corner or friend corner
+        #Check block isnt in your corner or friend corner, or your friend, or the wall(added when distance sensor error acounted for)
         if not(self.coordinate_in_my_box(self.coordinate_looking_at())) and not(self.distance_inside_friend_corner()) and not(self.looking_at_friend(friend_position)) and not(self.coordinate_is_wall(self.coordinate_looking_at())):
 
             #return true if the distance sensor value is less than the wall distance
@@ -96,10 +96,6 @@ class Detection(MyRobot):
                         self.emit_position(self.blockLocations[-1])
                 return True
             else:
-                #remove from blockLocations list if block is no longer there
-                #print(self.looking_in_list(self.blockLocations))
-                #if self.looking_in_list(self.blockLocations) != None:
-                #    self.blockLocations.remove(self.blockLocations[self.looking_in_list(self.blockLocations)])
                 return False
         else:
             return False
@@ -139,7 +135,7 @@ class Detection(MyRobot):
     
     
     def coordinate_looking_at(self):
-        "return the coordinate of the thing in the vision sensor"
+        "return the coordinate of the thing in vision of the distance sensor"
 
         #Find position of the robot, will use front position for finding distance
         front_position_xz = self.front_position()
@@ -229,7 +225,7 @@ class Detection(MyRobot):
     
     
     def distance_inside_friend_corner(self):
-        "return True if distance measured is inside the friend robot region"
+        "return True if distance measured is inside the friend robot corner"
 
         #Define the 2 boundaries
         wall_1_position = [0.8, 0.8]
@@ -281,7 +277,7 @@ class Detection(MyRobot):
             return False
 
     def correct_coordinate(self, coordinate_item):
-        "correct the inital block seen to middle"
+        "correct the inital block seen to middle of block, retrun this [x,y]"
         coordinate = [coordinate_item[0], coordinate_item[1]]
 
         my_position = self.mid_position()
